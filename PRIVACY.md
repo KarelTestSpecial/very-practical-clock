@@ -1,6 +1,6 @@
 Privacy Policy for "Very Practical Clock"
 
-Effective Date: 2025.06.15
+Effective Date: 2025.06.24
 
 This Privacy Policy describes how "Very Practical Clock" ("we," "us," or "our") handles your information.
 
