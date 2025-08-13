@@ -1,0 +1,458 @@
+
+// Globale DOM Element Referenties (na DOMContentLoaded)
+let tijdElement, datumElement, toggleSecondenKnop, toonInstellingenKnop, instellingenPaneel;
+let bewaarFavorietKnop, herstelStandaardKnop, herstelFavorietKnop;
+let fontTijdInput, grootteTijdInput, weergaveGrootteTijd, kleurTijdInput;
+let fontDatumInput, grootteDatumInput, weergaveGrootteDatum, kleurDatumInput;
+let achtergrondKleurInput, klokContainer, notepadContainer, notepadArea, toggleNotepadKnop;
+let notepadTextAlignSelect, fontNotepadInput, grootteNotepadInput, weergaveGrootteNotepad;
+let toggleDatumKnop, startScreensaverKnop, statusMessageElement, klokPositieSelect; // togglePositieKnop verwijderd, klokPositieSelect toegevoegd
+
+// Globale status- en timer-variabelen
+let toonSeconden;
+let isScreensaverActive = false;
+let screensaverIntervalId = null;
+let statusMessageTimeoutId = null;
+let windowResizeTimer = null;
+
+// Standaardinstellingen (positie aangepast)
+const standaardInstellingen = {
+    toonSeconden: false,
+    fontTijd: 'Verdana, sans-serif',
+    grootteTijd: 4.0,
+    kleurTijd: '#39FF14',
+    fontDatum: 'Arial, sans-serif',
+    grootteDatum: 1.2,
+    kleurDatum: '#B0B0B0',
+    achtergrondKleur: '#000000',
+    klokPositie: 'top-center', // Nieuwe standaard
+    isDatumVisible: true,
+    notepadContent: '',
+    isNotepadVisible: true,
+    notepadTextAlign: 'center',
+    fontNotepad: 'Arial, sans-serif',
+    grootteNotepad: 1.5,
+    notepadHeight: null,
+};
+
+function initializeDOMReferences() {
+    tijdElement = document.getElementById('tijd');
+    datumElement = document.getElementById('datum');
+    klokContainer = document.getElementById('klok-container');
+    instellingenPaneel = document.querySelector('.instellingen-paneel');
+    statusMessageElement = document.getElementById('status-message');
+
+    // Knoppen
+    toggleSecondenKnop = document.getElementById('toggle-seconden');
+    toggleDatumKnop = document.getElementById('toggle-datum');
+    toggleNotepadKnop = document.getElementById('toggle-notepad');
+    toonInstellingenKnop = document.getElementById('toon-instellingen');
+    startScreensaverKnop = document.getElementById('start-screensaver');
+    bewaarFavorietKnop = document.getElementById('bewaar-favoriet');
+    herstelStandaardKnop = document.getElementById('herstel-standaard');
+    herstelFavorietKnop = document.getElementById('herstel-favoriet');
+
+    // Instellingen
+    fontTijdInput = document.getElementById('font-tijd');
+    grootteTijdInput = document.getElementById('grootte-tijd');
+    weergaveGrootteTijd = document.getElementById('weergave-grootte-tijd');
+    kleurTijdInput = document.getElementById('kleur-tijd');
+    fontDatumInput = document.getElementById('font-datum');
+    grootteDatumInput = document.getElementById('grootte-datum');
+    weergaveGrootteDatum = document.getElementById('weergave-grootte-datum');
+    kleurDatumInput = document.getElementById('kleur-datum');
+    achtergrondKleurInput = document.getElementById('achtergrond-kleur');
+    klokPositieSelect = document.getElementById('klok-positie-select'); // Nieuw
+    notepadContainer = document.getElementById('notepad-container');
+    notepadArea = document.getElementById('notepad-area');
+    notepadTextAlignSelect = document.getElementById('notepad-text-align');
+    fontNotepadInput = document.getElementById('font-notepad');
+    grootteNotepadInput = document.getElementById('grootte-notepad');
+    weergaveGrootteNotepad = document.getElementById('weergave-grootte-notepad');
+}
+
+function applyTranslations() {
+    document.documentElement.lang = chrome.i18n.getUILanguage().split('-')[0];
+    document.getElementById('htmlPageTitle').textContent = chrome.i18n.getMessage('htmlPageTitle');
+    toggleSecondenKnop.textContent = chrome.i18n.getMessage('toggleSecondsText');
+    toggleDatumKnop.textContent = chrome.i18n.getMessage('toggleDateText');
+    toggleNotepadKnop.textContent = chrome.i18n.getMessage('toggleNotepadText');
+    toonInstellingenKnop.textContent = chrome.i18n.getMessage('toggleSettingsText');
+    startScreensaverKnop.textContent = chrome.i18n.getMessage('startScreensaverText');
+    document.getElementById('settingsTitleText').textContent = chrome.i18n.getMessage('settingsTitleText');
+    document.getElementById('lblFontTijd').textContent = chrome.i18n.getMessage('timeFontLabel');
+    document.getElementById('lblGrootteTijdText').textContent = chrome.i18n.getMessage('timeSizeLabelText');
+    document.getElementById('lblKleurTijd').textContent = chrome.i18n.getMessage('timeColorLabel');
+    document.getElementById('lblFontDatum').textContent = chrome.i18n.getMessage('dateFontLabel');
+    document.getElementById('lblGrootteDatumText').textContent = chrome.i18n.getMessage('dateSizeLabelText');
+    document.getElementById('lblKleurDatum').textContent = chrome.i18n.getMessage('dateColorLabel');
+    document.getElementById('lblAchtergrondKleur').textContent = chrome.i18n.getMessage('backgroundColorLabel');
+    document.getElementById('lblNotepadTextAlign').textContent = chrome.i18n.getMessage('notepadTextAlignLabel');
+    document.getElementById('lblFontNotepad').textContent = chrome.i18n.getMessage('notepadFontLabel');
+    document.getElementById('lblGrootteNotepadText').textContent = chrome.i18n.getMessage('notepadSizeLabelText');
+    document.getElementById('optTextAlignLeft').textContent = chrome.i18n.getMessage('textAlignLeft');
+    document.getElementById('optTextAlignCenter').textContent = chrome.i18n.getMessage('textAlignCenter');
+    document.getElementById('optTextAlignRight').textContent = chrome.i18n.getMessage('textAlignRight');
+    bewaarFavorietKnop.textContent = chrome.i18n.getMessage('saveFavoritesText');
+    herstelStandaardKnop.textContent = chrome.i18n.getMessage('defaultSettingsText');
+    herstelFavorietKnop.textContent = chrome.i18n.getMessage('restoreFavoritesText');
+    document.getElementById('screensaverInstructionsTitle').textContent = chrome.i18n.getMessage('screensaverInstructionsTitle');
+    document.getElementById('screensaverInstructionsText').textContent = chrome.i18n.getMessage('screensaverInstructionsText');
+    if (notepadArea) notepadArea.placeholder = chrome.i18n.getMessage('notepadPlaceholder');
+
+    // Vertalingen voor het nieuwe positie-keuzemenu
+    document.getElementById('lblKlokPositie').textContent = chrome.i18n.getMessage('positionLabel');
+    document.getElementById('optPosTopLeft').textContent = chrome.i18n.getMessage('posTopLeft');
+    document.getElementById('optPosTopCenter').textContent = chrome.i18n.getMessage('posTopCenter');
+    document.getElementById('optPosTopRight').textContent = chrome.i18n.getMessage('posTopRight');
+    document.getElementById('optPosCenterCenter').textContent = chrome.i18n.getMessage('posCenterCenter');
+    document.getElementById('optPosBottomLeft').textContent = chrome.i18n.getMessage('posBottomLeft');
+    document.getElementById('optPosBottomCenter').textContent = chrome.i18n.getMessage('posBottomCenter');
+    document.getElementById('optPosBottomRight').textContent = chrome.i18n.getMessage('posBottomRight');
+}
+
+// Herschreven functie voor het instellen van de lay-out
+function setKlokLayout(positie) {
+    document.body.classList.remove(
+        'position-top-left', 'position-top-center', 'position-top-right',
+        'position-center-center', 'position-bottom-left', 'position-bottom-center', 'position-bottom-right'
+    );
+    if (positie) {
+        document.body.classList.add(`position-${positie}`);
+    } else {
+        document.body.classList.add(`position-${standaardInstellingen.klokPositie}`); // Fallback
+    }
+}
+
+function applyAllSettings(settings) {
+    document.body.style.backgroundColor = settings.achtergrondKleur;
+    toonSeconden = settings.toonSeconden;
+
+    if (tijdElement) {
+        tijdElement.style.fontFamily = settings.fontTijd;
+        tijdElement.style.color = settings.kleurTijd;
+        tijdElement.style.fontSize = settings.grootteTijd + 'em';
+    }
+    if (datumElement) {
+        datumElement.style.fontFamily = settings.fontDatum;
+        datumElement.style.color = settings.kleurDatum;
+        datumElement.style.fontSize = settings.grootteDatum + 'em';
+    }
+    setKlokLayout(settings.klokPositie);
+
+    if (fontTijdInput) fontTijdInput.value = settings.fontTijd;
+    if (grootteTijdInput) grootteTijdInput.value = settings.grootteTijd;
+    if (weergaveGrootteTijd) weergaveGrootteTijd.textContent = settings.grootteTijd + 'em';
+    if (kleurTijdInput) kleurTijdInput.value = settings.kleurTijd;
+    if (fontDatumInput) fontDatumInput.value = settings.fontDatum;
+    if (grootteDatumInput) grootteDatumInput.value = settings.grootteDatum;
+    if (weergaveGrootteDatum) weergaveGrootteDatum.textContent = settings.grootteDatum + 'em';
+    if (kleurDatumInput) kleurDatumInput.value = settings.kleurDatum;
+    if (achtergrondKleurInput) achtergrondKleurInput.value = settings.achtergrondKleur;
+    if (klokPositieSelect) klokPositieSelect.value = settings.klokPositie; // Update dropdown
+}
+
+function applyNotepadSettings(settings) {
+    if (notepadArea) {
+        notepadArea.value = settings.notepadContent;
+        notepadArea.style.textAlign = settings.notepadTextAlign;
+        notepadArea.style.fontFamily = settings.fontNotepad;
+        notepadArea.style.fontSize = settings.grootteNotepad + 'em';
+    }
+    if (notepadTextAlignSelect) notepadTextAlignSelect.value = settings.notepadTextAlign;
+    if (fontNotepadInput) fontNotepadInput.value = settings.fontNotepad;
+    if (grootteNotepadInput) grootteNotepadInput.value = settings.grootteNotepad;
+    if (weergaveGrootteNotepad) weergaveGrootteNotepad.textContent = settings.grootteNotepad + 'em';
+}
+
+function applyDatumVisibility(isVisible) {
+    if (datumElement) {
+        datumElement.style.display = isVisible ? 'block' : 'none';
+    }
+}
+
+async function laadInstellingen() {
+    const opgeslagenInstellingen = await chrome.storage.local.get(standaardInstellingen);
+    applyAllSettings(opgeslagenInstellingen);
+    applyDatumVisibility(opgeslagenInstellingen.isDatumVisible);
+    applyNotepadSettings(opgeslagenInstellingen);
+    if (opgeslagenInstellingen.notepadHeight && notepadArea) {
+        notepadArea.style.height = `${opgeslagenInstellingen.notepadHeight}px`;
+    }
+    await updateActualNotepadVisibility();
+}
+
+async function applyAndSaveSetting(key, value, element, styleProperty) {
+    if (styleProperty) {
+        let finalValue = value;
+        if (key.startsWith('grootte')) {
+            finalValue = value + 'em';
+            if (key === 'grootteTijd' && weergaveGrootteTijd) weergaveGrootteTijd.textContent = finalValue;
+            else if (key === 'grootteDatum' && weergaveGrootteDatum) weergaveGrootteDatum.textContent = finalValue;
+            else if (key === 'grootteNotepad' && weergaveGrootteNotepad) weergaveGrootteNotepad.textContent = finalValue;
+        }
+        if (element) element.style[styleProperty] = finalValue;
+    } else if (key === 'klokPositie') {
+        setKlokLayout(value);
+    }
+    await chrome.storage.local.set({ [key]: value });
+}
+
+function updateKlok() {
+    if (!tijdElement || !datumElement) return;
+    const nu = new Date();
+    let uren = nu.getHours().toString().padStart(2, '0');
+    let minuten = nu.getMinutes().toString().padStart(2, '0');
+    let tijdString = `${uren}:${minuten}`;
+    if (toonSeconden) {
+        tijdString += `:${nu.getSeconds().toString().padStart(2, '0')}`;
+    }
+    tijdElement.textContent = tijdString;
+    const currentLocale = chrome.i18n.getMessage('dateLocale');
+    const optiesDatum = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    datumElement.textContent = nu.toLocaleDateString(currentLocale, optiesDatum);
+}
+
+async function updateActualNotepadVisibility() {
+    let { isNotepadVisible } = await chrome.storage.local.get('isNotepadVisible');
+    if (isNotepadVisible === undefined) isNotepadVisible = standaardInstellingen.isNotepadVisible;
+    if (notepadContainer) {
+        notepadContainer.classList.toggle('hidden', !isNotepadVisible);
+    }
+}
+
+async function toggleUserPreferenceNotepad() {
+    let { isNotepadVisible } = await chrome.storage.local.get('isNotepadVisible');
+    const nieuweVoorkeur = isNotepadVisible === undefined ? !standaardInstellingen.isNotepadVisible : !isNotepadVisible;
+    await chrome.storage.local.set({ isNotepadVisible: nieuweVoorkeur });
+    await updateActualNotepadVisibility();
+}
+
+function toggleInstellingenPaneel() {
+    if (instellingenPaneel) instellingenPaneel.classList.toggle('hidden');
+}
+
+async function saveNotepadContent() {
+    if (notepadArea) await chrome.storage.local.set({ notepadContent: notepadArea.value });
+}
+
+function showStatusMessage(message) {
+    if (!statusMessageElement) return;
+    if (statusMessageTimeoutId) clearTimeout(statusMessageTimeoutId);
+    statusMessageElement.textContent = message;
+    statusMessageElement.classList.add('visible');
+    statusMessageTimeoutId = setTimeout(() => {
+        statusMessageElement.classList.remove('visible');
+        statusMessageTimeoutId = null;
+    }, 2500);
+}
+
+async function bewaarFavorieteInstellingen() {
+    const { isDatumVisible } = await chrome.storage.local.get('isDatumVisible');
+    const huidigeInstellingen = {
+        toonSeconden: toonSeconden,
+        isDatumVisible: (isDatumVisible === undefined) ? standaardInstellingen.isDatumVisible : isDatumVisible,
+        fontTijd: fontTijdInput.value,
+        grootteTijd: parseFloat(grootteTijdInput.value),
+        kleurTijd: kleurTijdInput.value,
+        fontDatum: fontDatumInput.value,
+        grootteDatum: parseFloat(grootteDatumInput.value),
+        kleurDatum: kleurDatumInput.value,
+        achtergrondKleur: achtergrondKleurInput.value,
+        klokPositie: klokPositieSelect.value, // Gebruik waarde van dropdown
+        notepadTextAlign: notepadTextAlignSelect.value,
+        fontNotepad: fontNotepadInput.value,
+        grootteNotepad: parseFloat(grootteNotepadInput.value),
+        notepadHeight: notepadArea ? notepadArea.offsetHeight : null
+    };
+    await chrome.storage.local.set({ favorieteInstellingen: huidigeInstellingen });
+    showStatusMessage(chrome.i18n.getMessage('alertFavoriteSaved'));
+}
+
+async function herstelStandaardInstellingen() {
+    applyAllSettings(standaardInstellingen);
+    applyDatumVisibility(standaardInstellingen.isDatumVisible);
+    applyNotepadSettings({ ...standaardInstellingen, notepadContent: notepadArea.value });
+    if (notepadArea) {
+        notepadArea.style.height = '';
+    }
+    const instellingenOmOpTeSlaan = { ...standaardInstellingen };
+    delete instellingenOmOpTeSlaan.notepadContent;
+    await chrome.storage.local.set({ ...instellingenOmOpTeSlaan, notepadHeight: null });
+    await updateActualNotepadVisibility();
+}
+
+async function herstelFavorieteInstellingen() {
+    const { favorieteInstellingen } = await chrome.storage.local.get('favorieteInstellingen');
+
+    if (favorieteInstellingen) {
+        const settingsToApply = { 
+            ...standaardInstellingen, 
+            ...favorieteInstellingen,
+            notepadContent: notepadArea ? notepadArea.value : ''
+        };
+        applyAllSettings(settingsToApply);
+        applyDatumVisibility(settingsToApply.isDatumVisible);
+        applyNotepadSettings(settingsToApply);
+        if (settingsToApply.notepadHeight && notepadArea) {
+            notepadArea.style.height = `${settingsToApply.notepadHeight}px`;
+        } else if (notepadArea) {
+            notepadArea.style.height = '';
+        }
+        const settingsToSave = { ...settingsToApply };
+        delete settingsToSave.notepadContent;
+        await chrome.storage.local.set(settingsToSave);
+        await updateActualNotepadVisibility();
+        showStatusMessage(chrome.i18n.getMessage('alertFavoriteRestored'));
+    } else {
+        showStatusMessage(chrome.i18n.getMessage('alertNoFavoriteFound'));
+    }
+}
+
+// --- Screensaver Functies ---
+function moveClockRandomly() {
+    if (!isScreensaverActive || !klokContainer) return;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const clockWidth = klokContainer.offsetWidth;
+    const clockHeight = klokContainer.offsetHeight;
+    const randomTop = Math.floor(Math.random() * (windowHeight - clockHeight));
+    const randomLeft = Math.floor(Math.random() * (windowWidth - clockWidth));
+    klokContainer.style.top = `${randomTop}px`;
+    klokContainer.style.left = `${randomLeft}px`;
+}
+
+function startScreensaver() {
+    moveClockRandomly();
+    screensaverIntervalId = setInterval(moveClockRandomly, 7000);
+}
+
+function stopScreensaver() {
+    if (screensaverIntervalId) {
+        clearInterval(screensaverIntervalId);
+        screensaverIntervalId = null;
+    }
+    if (klokContainer) {
+        klokContainer.style.top = '';
+        klokContainer.style.left = '';
+    }
+    chrome.storage.local.get('klokPositie', ({ klokPositie = standaardInstellingen.klokPositie }) => {
+        setKlokLayout(klokPositie);
+    });
+}
+
+async function toggleScreensaver(event) {
+    if (event) event.stopPropagation();
+    isScreensaverActive = !isScreensaverActive;
+    if (isScreensaverActive) {
+        const currentWindow = await chrome.windows.getCurrent();
+        document.body.classList.add('screensaver-active');
+        document.addEventListener('click', handleScreensaverBackgroundClick, true);
+        try { await chrome.windows.update(currentWindow.id, { state: "fullscreen" }); }
+        catch (e) { console.error("Kon venster niet naar fullscreen schakelen:", e); }
+        startScreensaver();
+    } else {
+        const currentWindow = await chrome.windows.getCurrent();
+        document.body.classList.remove('screensaver-active');
+        document.removeEventListener('click', handleScreensaverBackgroundClick, true);
+        stopScreensaver();
+        try {
+            if ((await chrome.windows.get(currentWindow.id)).state === "fullscreen") {
+                await chrome.windows.update(currentWindow.id, { state: "normal" });
+            }
+        } catch (e) { console.error("Kon venster niet naar normaal schakelen:", e); }
+    }
+}
+
+async function handleScreensaverBackgroundClick(event) {
+    if (isScreensaverActive && event.target !== tijdElement && event.target !== datumElement) {
+        await toggleScreensaver();
+    }
+}
+
+// Event Listeners Setup Functie
+function setupEventListeners() {
+    toggleSecondenKnop.addEventListener('click', async () => {
+        toonSeconden = !toonSeconden;
+        updateKlok();
+        await chrome.storage.local.set({ toonSeconden: toonSeconden });
+    });
+    toggleDatumKnop.addEventListener('click', async () => {
+        let { isDatumVisible } = await chrome.storage.local.get('isDatumVisible');
+        if (isDatumVisible === undefined) isDatumVisible = standaardInstellingen.isDatumVisible;
+        const nieuweZichtbaarheid = !isDatumVisible;
+        applyDatumVisibility(nieuweZichtbaarheid);
+        await chrome.storage.local.set({ isDatumVisible: nieuweZichtbaarheid });
+    });
+    toonInstellingenKnop.addEventListener('click', toggleInstellingenPaneel);
+    bewaarFavorietKnop.addEventListener('click', bewaarFavorieteInstellingen);
+    herstelStandaardKnop.addEventListener('click', herstelStandaardInstellingen);
+    herstelFavorietKnop.addEventListener('click', herstelFavorieteInstellingen);
+    toggleNotepadKnop.addEventListener('click', toggleUserPreferenceNotepad);
+    startScreensaverKnop.addEventListener('click', toggleScreensaver);
+    tijdElement.addEventListener('click', toggleScreensaver);
+    datumElement.addEventListener('click', toggleScreensaver);
+
+    // Listener voor het nieuwe positie-keuzemenu
+    klokPositieSelect.addEventListener('input', (e) => applyAndSaveSetting('klokPositie', e.target.value, null, null));
+
+    fontTijdInput.addEventListener('input', (e) => applyAndSaveSetting('fontTijd', e.target.value, tijdElement, 'fontFamily'));
+    grootteTijdInput.addEventListener('input', (e) => applyAndSaveSetting('grootteTijd', parseFloat(e.target.value), tijdElement, 'fontSize'));
+    fontDatumInput.addEventListener('input', (e) => applyAndSaveSetting('fontDatum', e.target.value, datumElement, 'fontFamily'));
+    grootteDatumInput.addEventListener('input', (e) => applyAndSaveSetting('grootteDatum', parseFloat(e.target.value), datumElement, 'fontSize'));
+    
+    if (notepadArea) {
+        notepadArea.addEventListener('input', saveNotepadContent);
+        let resizeTimeout;
+        const resizeObserver = new ResizeObserver(() => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(async () => {
+                await chrome.storage.local.set({ notepadHeight: notepadArea.offsetHeight });
+            }, 500);
+        });
+        resizeObserver.observe(notepadArea);
+    }
+    if (notepadTextAlignSelect) notepadTextAlignSelect.addEventListener('input', (e) => applyAndSaveSetting('notepadTextAlign', e.target.value, notepadArea, 'textAlign'));
+    if (fontNotepadInput) fontNotepadInput.addEventListener('input', (e) => applyAndSaveSetting('fontNotepad', e.target.value, notepadArea, 'fontFamily'));
+    if (grootteNotepadInput) grootteNotepadInput.addEventListener('input', (e) => applyAndSaveSetting('grootteNotepad', parseFloat(e.target.value), notepadArea, 'fontSize'));
+
+    kleurTijdInput.addEventListener('input', (e) => applyAndSaveSetting('kleurTijd', e.target.value, tijdElement, 'color'));
+    kleurDatumInput.addEventListener('input', (e) => applyAndSaveSetting('kleurDatum', e.target.value, datumElement, 'color'));
+    achtergrondKleurInput.addEventListener('input', (e) => applyAndSaveSetting('achtergrondKleur', e.target.value, document.body, 'backgroundColor'));    
+    
+    window.addEventListener('resize', async () => {
+        if (isScreensaverActive) {
+            try {
+                const currentWindow = await chrome.windows.getCurrent();
+                if (currentWindow.state !== 'fullscreen') {
+                    await toggleScreensaver();
+                }
+            } catch (e) { /* Negeer fouten als venster al gesloten is */ }
+        }
+        clearTimeout(windowResizeTimer);
+        windowResizeTimer = setTimeout(async () => {
+            try {
+                const currentWindow = await chrome.windows.getCurrent();
+                if (currentWindow.state === 'normal') {
+                    await chrome.storage.local.set({
+                        windowWidth: window.outerWidth,
+                        windowHeight: window.outerHeight
+                    });
+                }
+            } catch (e) { /* Negeer fouten */ }
+        }, 500);
+    });
+}
+
+// Hoofd Initialisatie Functie
+async function initializeClock() {
+    initializeDOMReferences();
+    applyTranslations(); // Zorg ervoor dat dit voor laadInstellingen komt ivm locale-afhankelijkheden
+    await laadInstellingen();
+    document.body.style.visibility = 'visible';
+    updateKlok();
+    setupEventListeners();
+    setInterval(updateKlok, 1000);
+}
+
+document.addEventListener('DOMContentLoaded', initializeClock);

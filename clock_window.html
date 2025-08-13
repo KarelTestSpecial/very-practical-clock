@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="htmlPageTitle"></title>
+    <link rel="stylesheet" href="clock_style.css">
+</head>
+<body>
+    <div id="klok-container">
+        <div id="tijd"></div>
+        <div id="datum"></div>
+
+        <div id="notepad-container">
+            <textarea id="notepad-area" rows="3"></textarea>
+        </div>
+
+        <div id="knoppen-wrapper">
+            <!-- Alleen de instellingenknop blijft over -->
+            <button id="toon-instellingen"></button>
+        </div>
+
+        <div class="instellingen-paneel hidden">
+            <h3 id="settingsTitleText"></h3>
+
+            <!-- GROEP 0: ACTIES (NU MET 3 KNOPPEN OP EEN RIJ) -->
+            <div class="instellingen-acties-groep">
+                <button id="toggle-seconden"></button>
+                <button id="toggle-notepad"></button>
+                <button id="toggle-datum"></button>
+            </div>
+            <button id="start-screensaver" class="screensaver-knop-in-paneel"></button>
+        
+            <!-- GROEP 1: LETTERTYPES & GROOTTES -->
+            <div class="instelling-groep-horizontaal">
+                <div class="instelling-item">
+                    <label for="font-tijd" id="lblFontTijd"></label>
+                    <select id="font-tijd">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="Helvetica, sans-serif">Helvetica</option>
+                        <option value="Tahoma, sans-serif">Tahoma</option>
+                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="'Lucida Console', monospace">Lucida Console</option>
+                        <option value="monospace">Default Monospace</option>
+                        <option value="sans-serif">Default Sans-serif</option>
+                        <option value="serif">Default Serif</option>
+                    </select>
+                </div>
+                <div class="instelling-item">
+                    <label for="grootte-tijd">
+                        <span id="lblGrootteTijdText"></span> <span id="weergave-grootte-tijd"></span>
+                    </label>
+                    <input type="range" id="grootte-tijd" min="1.0" max="7.0" step="0.1">
+                </div>
+            </div>
+        
+            <div class="instelling-groep-horizontaal">
+                <div class="instelling-item">
+                    <label for="font-datum" id="lblFontDatum"></label>
+                    <select id="font-datum">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="Helvetica, sans-serif">Helvetica</option>
+                        <option value="Tahoma, sans-serif">Tahoma</option>
+                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="'Lucida Console', monospace">Lucida Console</option>
+                        <option value="monospace">Default Monospace</option>
+                        <option value="sans-serif">Default Sans-serif</option>
+                        <option value="serif">Default Serif</option>
+                    </select>
+                </div>
+                <div class="instelling-item">
+                    <label for="grootte-datum">
+                        <span id="lblGrootteDatumText"></span> <span id="weergave-grootte-datum"></span>
+                    </label>
+                    <input type="range" id="grootte-datum" min="0.6" max="2.0" step="0.1">
+                </div>
+            </div>
+
+            <div class="instelling-groep-horizontaal">
+                <div class="instelling-item">
+                    <label for="font-notepad" id="lblFontNotepad"></label>
+                    <select id="font-notepad">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="Helvetica, sans-serif">Helvetica</option>
+                        <option value="Tahoma, sans-serif">Tahoma</option>
+                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="'Lucida Console', monospace">Lucida Console</option>
+                        <option value="monospace">Default Monospace</option>
+                        <option value="sans-serif">Default Sans-serif</option>
+                        <option value="serif">Default Serif</option>
+                    </select>
+                </div>
+                <div class="instelling-item">
+                    <label for="grootte-notepad">
+                        <span id="lblGrootteNotepadText"></span> <span id="weergave-grootte-notepad"></span>
+                    </label>
+                    <input type="range" id="grootte-notepad" min="1.0" max="3.0" step="0.1">
+                </div>
+            </div>
+        
+            <label for="notepad-text-align" id="lblNotepadTextAlign"></label>
+            <select id="notepad-text-align">
+                <option value="left" id="optTextAlignLeft"></option>
+                <option value="center" id="optTextAlignCenter"></option>
+                <option value="right" id="optTextAlignRight"></option>
+            </select>
+        
+            <!-- GROEP 2: KLEUREN & POSITIE -->
+            <div class="instelling-groep-horizontaal color-picker-groep">
+                <div class="instelling-item">
+                    <label for="kleur-tijd" id="lblKleurTijd"></label>
+                    <input type="color" id="kleur-tijd">
+                </div>
+                <div class="instelling-item">
+                    <label for="kleur-datum" id="lblKleurDatum"></label>
+                    <input type="color" id="kleur-datum">
+                </div>
+            </div>
+        
+            <label for="achtergrond-kleur" id="lblAchtergrondKleur"></label>
+            <input type="color" id="achtergrond-kleur">
+
+            <!-- NIEUW: POSITIE KEUZEMENU -->
+            <label for="klok-positie-select" id="lblKlokPositie"></label>
+            <select id="klok-positie-select">
+                <option value="top-left" id="optPosTopLeft"></option>
+                <option value="top-center" id="optPosTopCenter"></option>
+                <option value="top-right" id="optPosTopRight"></option>
+                <option value="center-center" id="optPosCenterCenter"></option>
+                <option value="bottom-left" id="optPosBottomLeft"></option>
+                <option value="bottom-center" id="optPosBottomCenter"></option>
+                <option value="bottom-right" id="optPosBottomRight"></option>
+            </select>
+        
+            <!-- GROEP 3: INSTRUCTIES -->
+            <div class="screensaver-instructies">
+                <h4 id="screensaverInstructionsTitle"></h4>
+                <p id="screensaverInstructionsText"></p>
+            </div>
+        
+            <!-- GROEP 4: KNOPPEN -->
+            <div class="instellingen-knoppen-groep">
+                <button id="bewaar-favoriet"></button>
+                <button id="herstel-standaard"></button>
+                <button id="herstel-favoriet"></button>
+            </div>
+        </div>
+    </div>
+    <div id="status-message"></div>
+    <script src="clock_script.js"></script>
+</body>
+</html>
