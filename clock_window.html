@@ -10,6 +10,7 @@
     <div id="klok-container">
         <div id="tijd"></div>
         <div id="datum"></div>
+        <div id="batterij-status"></div>
 
         <div id="notepad-container">
             <textarea id="notepad-area" rows="3"></textarea>
@@ -28,6 +29,7 @@
                 <button id="toggle-seconden"></button>
                 <button id="toggle-notepad"></button>
                 <button id="toggle-datum"></button>
+                <button id="toggle-batterij"></button>
             </div>
             <button id="start-screensaver" class="screensaver-knop-in-paneel"></button>
         
@@ -80,7 +82,28 @@
                     <label for="grootte-datum">
                         <span id="lblGrootteDatumText"></span> <span id="weergave-grootte-datum"></span>
                     </label>
-                    <input type="range" id="grootte-datum" min="0.6" max="2.0" step="0.1">
+                    <input type="range" id="grootte-datum" min="1.0" max="3.0" step="0.1">
+                </div>
+            </div>
+
+            <div class="instelling-groep-horizontaal">
+                <div class="instelling-item">
+                    <label for="font-batterij" id="lblFontBatterij"></label>
+                    <select id="font-batterij">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="'Arial Black', sans-serif">Arial Black</option>
+                        <option value="Impact, sans-serif">Impact</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="monospace">Default Monospace</option>
+                        <option value="sans-serif">Default Sans-serif</option>
+                    </select>
+                </div>
+                <div class="instelling-item">
+                    <label for="grootte-batterij">
+                        <span id="lblGrootteBatterijText"></span> <span id="weergave-grootte-batterij"></span>
+                    </label>
+                    <input type="range" id="grootte-batterij" min="1.0" max="3.0" step="0.1">
                 </div>
             </div>
 
@@ -128,9 +151,17 @@
                     <input type="color" id="kleur-datum">
                 </div>
             </div>
-        
-            <label for="achtergrond-kleur" id="lblAchtergrondKleur"></label>
-            <input type="color" id="achtergrond-kleur">
+
+            <div class="instelling-groep-horizontaal color-picker-groep">
+                <div class="instelling-item">
+                    <label for="kleur-batterij" id="lblKleurBatterij"></label>
+                    <input type="color" id="kleur-batterij">
+                </div>
+                <div class="instelling-item">
+                    <label for="achtergrond-kleur" id="lblAchtergrondKleur"></label>
+                    <input type="color" id="achtergrond-kleur">
+                </div>
+            </div>
 
             <!-- NIEUW: POSITIE KEUZEMENU -->
             <label for="klok-positie-select" id="lblKlokPositie"></label>
