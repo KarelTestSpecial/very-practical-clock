@@ -391,16 +391,7 @@ async function updateBatteryStatus() {
     try {
         const battery = await navigator.getBattery();
         const level = Math.floor(battery.level * 100);
-        let icon;
-        if (battery.charging) {
-            icon = '⚡️';
-        } else {
-            if (level > 80) icon = '🔋';
-            else if (level > 50) icon = '🔋';
-            else if (level > 20) icon = '🔋';
-            else icon = '🪫';
-        }
-        batterijStatusElement.textContent = `${icon} ${level}%`;
+        batterijStatusElement.textContent = `${level}%`;
     } catch (error) {
         console.error('Error getting battery status:', error);
         batterijStatusElement.style.display = 'none';
