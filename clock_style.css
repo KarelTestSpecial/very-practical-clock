@@ -171,10 +171,11 @@ button:hover {
     align-self: inherit;
 }
 
-/* AANGEPAST: 3 KOLOMMEN VOOR DE ACTIEKNOPPEN */
+/* AANGEPAST: 2x2 RASTER VOOR DE ACTIEKNOPPEN */
 .instellingen-acties-groep {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
     gap: 5px;
     width: 100%;
     margin-bottom: 10px;
