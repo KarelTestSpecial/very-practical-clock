@@ -1,9 +1,9 @@
 {
     "extName": {
-        "message": "Clock Tab"
+        "message": "Very Practical Clock"
     },
     "extDescription": {
-        "message": "A customizable clock that opens in a new tab."
+        "message": "A customizable digital clock that always stays on top ...or not."
     },
     "htmlPageTitle": {
         "message": "Clock Tab"
