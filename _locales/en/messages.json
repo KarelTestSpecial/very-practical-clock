@@ -44,6 +44,12 @@
     "dateColorLabel": {
         "message": "Date Color"
     },
+    "batteryColorLabel": {
+        "message": "Battery Color"
+    },
+    "batterySizeLabelText": {
+        "message": "Battery Size"
+    },
     "backgroundColorLabel": {
         "message": "Background Color"
     },

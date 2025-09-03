@@ -4,6 +4,7 @@ let tijdElement, datumElement, toggleSecondenKnop, toonInstellingenKnop, instell
 let bewaarFavorietKnop, herstelStandaardKnop, herstelFavorietKnop;
 let fontTijdInput, grootteTijdInput, weergaveGrootteTijd, kleurTijdInput;
 let fontDatumInput, grootteDatumInput, weergaveGrootteDatum, kleurDatumInput;
+let kleurBatterijInput, grootteBatterijInput, weergaveGrootteBatterij;
 let achtergrondKleurInput, klokContainer, notepadContainer, notepadArea, toggleNotepadKnop;
 let notepadTextAlignSelect, fontNotepadInput, grootteNotepadInput, weergaveGrootteNotepad;
 let toggleDatumKnop, startScreensaverKnop, statusMessageElement, klokPositieSelect; // togglePositieKnop verwijderd, klokPositieSelect toegevoegd
@@ -25,6 +26,8 @@ const standaardInstellingen = {
     fontDatum: 'Arial, sans-serif',
     grootteDatum: 1.2,
     kleurDatum: '#B0B0B0',
+    grootteBatterij: 1.2,
+    kleurBatterij: '#FFFFFF',
     achtergrondKleur: '#000000',
     klokPositie: 'top-center', // Nieuwe standaard
     isDatumVisible: true,
@@ -64,6 +67,9 @@ function initializeDOMReferences() {
     grootteDatumInput = document.getElementById('grootte-datum');
     weergaveGrootteDatum = document.getElementById('weergave-grootte-datum');
     kleurDatumInput = document.getElementById('kleur-datum');
+    kleurBatterijInput = document.getElementById('kleur-batterij');
+    grootteBatterijInput = document.getElementById('grootte-batterij');
+    weergaveGrootteBatterij = document.getElementById('weergave-grootte-batterij');
     achtergrondKleurInput = document.getElementById('achtergrond-kleur');
     klokPositieSelect = document.getElementById('klok-positie-select'); // Nieuw
     notepadContainer = document.getElementById('notepad-container');
@@ -90,6 +96,8 @@ function applyTranslations() {
     document.getElementById('lblFontDatum').textContent = chrome.i18n.getMessage('dateFontLabel');
     document.getElementById('lblGrootteDatumText').textContent = chrome.i18n.getMessage('dateSizeLabelText');
     document.getElementById('lblKleurDatum').textContent = chrome.i18n.getMessage('dateColorLabel');
+    document.getElementById('lblKleurBatterij').textContent = chrome.i18n.getMessage('batteryColorLabel');
+    document.getElementById('lblGrootteBatterijText').textContent = chrome.i18n.getMessage('batterySizeLabelText');
     document.getElementById('lblAchtergrondKleur').textContent = chrome.i18n.getMessage('backgroundColorLabel');
     document.getElementById('lblNotepadTextAlign').textContent = chrome.i18n.getMessage('notepadTextAlignLabel');
     document.getElementById('lblFontNotepad').textContent = chrome.i18n.getMessage('notepadFontLabel');
@@ -143,6 +151,10 @@ function applyAllSettings(settings) {
         datumElement.style.color = settings.kleurDatum;
         datumElement.style.fontSize = settings.grootteDatum + 'em';
     }
+    if (batterijStatusElement) {
+        batterijStatusElement.style.color = settings.kleurBatterij;
+        batterijStatusElement.style.fontSize = settings.grootteBatterij + 'em';
+    }
     setKlokLayout(settings.klokPositie);
 
     if (fontTijdInput) fontTijdInput.value = settings.fontTijd;
@@ -153,6 +165,9 @@ function applyAllSettings(settings) {
     if (grootteDatumInput) grootteDatumInput.value = settings.grootteDatum;
     if (weergaveGrootteDatum) weergaveGrootteDatum.textContent = settings.grootteDatum + 'em';
     if (kleurDatumInput) kleurDatumInput.value = settings.kleurDatum;
+    if (kleurBatterijInput) kleurBatterijInput.value = settings.kleurBatterij;
+    if (grootteBatterijInput) grootteBatterijInput.value = settings.grootteBatterij;
+    if (weergaveGrootteBatterij) weergaveGrootteBatterij.textContent = settings.grootteBatterij + 'em';
     if (achtergrondKleurInput) achtergrondKleurInput.value = settings.achtergrondKleur;
     if (klokPositieSelect) klokPositieSelect.value = settings.klokPositie; // Update dropdown
 }
@@ -195,6 +210,7 @@ async function applyAndSaveSetting(key, value, element, styleProperty) {
             finalValue = value + 'em';
             if (key === 'grootteTijd' && weergaveGrootteTijd) weergaveGrootteTijd.textContent = finalValue;
             else if (key === 'grootteDatum' && weergaveGrootteDatum) weergaveGrootteDatum.textContent = finalValue;
+            else if (key === 'grootteBatterij' && weergaveGrootteBatterij) weergaveGrootteBatterij.textContent = finalValue;
             else if (key === 'grootteNotepad' && weergaveGrootteNotepad) weergaveGrootteNotepad.textContent = finalValue;
         }
         if (element) element.style[styleProperty] = finalValue;
@@ -265,6 +281,8 @@ async function bewaarFavorieteInstellingen() {
         fontDatum: fontDatumInput.value,
         grootteDatum: parseFloat(grootteDatumInput.value),
         kleurDatum: kleurDatumInput.value,
+        kleurBatterij: kleurBatterijInput.value,
+        grootteBatterij: parseFloat(grootteBatterijInput.value),
         achtergrondKleur: achtergrondKleurInput.value,
         klokPositie: klokPositieSelect.value, // Gebruik waarde van dropdown
         notepadTextAlign: notepadTextAlignSelect.value,
@@ -435,6 +453,7 @@ function setupEventListeners() {
     grootteTijdInput.addEventListener('input', (e) => applyAndSaveSetting('grootteTijd', parseFloat(e.target.value), tijdElement, 'fontSize'));
     fontDatumInput.addEventListener('input', (e) => applyAndSaveSetting('fontDatum', e.target.value, datumElement, 'fontFamily'));
     grootteDatumInput.addEventListener('input', (e) => applyAndSaveSetting('grootteDatum', parseFloat(e.target.value), datumElement, 'fontSize'));
+    grootteBatterijInput.addEventListener('input', (e) => applyAndSaveSetting('grootteBatterij', parseFloat(e.target.value), batterijStatusElement, 'fontSize'));
     
     if (notepadArea) {
         notepadArea.addEventListener('input', saveNotepadContent);
@@ -453,6 +472,7 @@ function setupEventListeners() {
 
     kleurTijdInput.addEventListener('input', (e) => applyAndSaveSetting('kleurTijd', e.target.value, tijdElement, 'color'));
     kleurDatumInput.addEventListener('input', (e) => applyAndSaveSetting('kleurDatum', e.target.value, datumElement, 'color'));
+    kleurBatterijInput.addEventListener('input', (e) => applyAndSaveSetting('kleurBatterij', e.target.value, batterijStatusElement, 'color'));
     achtergrondKleurInput.addEventListener('input', (e) => applyAndSaveSetting('achtergrondKleur', e.target.value, document.body, 'backgroundColor'));    
     
     window.addEventListener('resize', async () => {
