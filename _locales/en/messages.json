@@ -44,6 +44,9 @@
     "dateColorLabel": {
         "message": "Date Color"
     },
+    "batteryFontLabel": {
+        "message": "Battery Font"
+    },
     "batteryColorLabel": {
         "message": "Battery Color"
     },

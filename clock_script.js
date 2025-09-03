@@ -4,7 +4,7 @@ let tijdElement, datumElement, toggleSecondenKnop, toonInstellingenKnop, instell
 let bewaarFavorietKnop, herstelStandaardKnop, herstelFavorietKnop;
 let fontTijdInput, grootteTijdInput, weergaveGrootteTijd, kleurTijdInput;
 let fontDatumInput, grootteDatumInput, weergaveGrootteDatum, kleurDatumInput;
-let kleurBatterijInput, grootteBatterijInput, weergaveGrootteBatterij;
+let fontBatterijInput, kleurBatterijInput, grootteBatterijInput, weergaveGrootteBatterij;
 let achtergrondKleurInput, klokContainer, notepadContainer, notepadArea, toggleNotepadKnop;
 let notepadTextAlignSelect, fontNotepadInput, grootteNotepadInput, weergaveGrootteNotepad;
 let toggleDatumKnop, startScreensaverKnop, statusMessageElement, klokPositieSelect; // togglePositieKnop verwijderd, klokPositieSelect toegevoegd
@@ -26,6 +26,7 @@ const standaardInstellingen = {
     fontDatum: 'Arial, sans-serif',
     grootteDatum: 1.2,
     kleurDatum: '#B0B0B0',
+    fontBatterij: 'Arial, sans-serif',
     grootteBatterij: 1.2,
     kleurBatterij: '#B0B0B0',
     achtergrondKleur: '#000000',
@@ -67,6 +68,7 @@ function initializeDOMReferences() {
     grootteDatumInput = document.getElementById('grootte-datum');
     weergaveGrootteDatum = document.getElementById('weergave-grootte-datum');
     kleurDatumInput = document.getElementById('kleur-datum');
+    fontBatterijInput = document.getElementById('font-batterij');
     kleurBatterijInput = document.getElementById('kleur-batterij');
     grootteBatterijInput = document.getElementById('grootte-batterij');
     weergaveGrootteBatterij = document.getElementById('weergave-grootte-batterij');
@@ -96,6 +98,7 @@ function applyTranslations() {
     document.getElementById('lblFontDatum').textContent = chrome.i18n.getMessage('dateFontLabel');
     document.getElementById('lblGrootteDatumText').textContent = chrome.i18n.getMessage('dateSizeLabelText');
     document.getElementById('lblKleurDatum').textContent = chrome.i18n.getMessage('dateColorLabel');
+    document.getElementById('lblFontBatterij').textContent = chrome.i18n.getMessage('batteryFontLabel');
     document.getElementById('lblKleurBatterij').textContent = chrome.i18n.getMessage('batteryColorLabel');
     document.getElementById('lblGrootteBatterijText').textContent = chrome.i18n.getMessage('batterySizeLabelText');
     document.getElementById('lblAchtergrondKleur').textContent = chrome.i18n.getMessage('backgroundColorLabel');
@@ -152,6 +155,7 @@ function applyAllSettings(settings) {
         datumElement.style.fontSize = settings.grootteDatum + 'em';
     }
     if (batterijStatusElement) {
+        batterijStatusElement.style.fontFamily = settings.fontBatterij;
         batterijStatusElement.style.color = settings.kleurBatterij;
         batterijStatusElement.style.fontSize = settings.grootteBatterij + 'em';
     }
@@ -165,6 +169,7 @@ function applyAllSettings(settings) {
     if (grootteDatumInput) grootteDatumInput.value = settings.grootteDatum;
     if (weergaveGrootteDatum) weergaveGrootteDatum.textContent = settings.grootteDatum + 'em';
     if (kleurDatumInput) kleurDatumInput.value = settings.kleurDatum;
+    if (fontBatterijInput) fontBatterijInput.value = settings.fontBatterij;
     if (kleurBatterijInput) kleurBatterijInput.value = settings.kleurBatterij;
     if (grootteBatterijInput) grootteBatterijInput.value = settings.grootteBatterij;
     if (weergaveGrootteBatterij) weergaveGrootteBatterij.textContent = settings.grootteBatterij + 'em';
@@ -281,6 +286,7 @@ async function bewaarFavorieteInstellingen() {
         fontDatum: fontDatumInput.value,
         grootteDatum: parseFloat(grootteDatumInput.value),
         kleurDatum: kleurDatumInput.value,
+        fontBatterij: fontBatterijInput.value,
         kleurBatterij: kleurBatterijInput.value,
         grootteBatterij: parseFloat(grootteBatterijInput.value),
         achtergrondKleur: achtergrondKleurInput.value,
@@ -453,6 +459,7 @@ function setupEventListeners() {
     grootteTijdInput.addEventListener('input', (e) => applyAndSaveSetting('grootteTijd', parseFloat(e.target.value), tijdElement, 'fontSize'));
     fontDatumInput.addEventListener('input', (e) => applyAndSaveSetting('fontDatum', e.target.value, datumElement, 'fontFamily'));
     grootteDatumInput.addEventListener('input', (e) => applyAndSaveSetting('grootteDatum', parseFloat(e.target.value), datumElement, 'fontSize'));
+    fontBatterijInput.addEventListener('input', (e) => applyAndSaveSetting('fontBatterij', e.target.value, batterijStatusElement, 'fontFamily'));
     grootteBatterijInput.addEventListener('input', (e) => applyAndSaveSetting('grootteBatterij', parseFloat(e.target.value), batterijStatusElement, 'fontSize'));
     
     if (notepadArea) {
