@@ -27,7 +27,7 @@ const standaardInstellingen = {
     grootteDatum: 1.2,
     kleurDatum: '#B0B0B0',
     grootteBatterij: 1.2,
-    kleurBatterij: '#FFFFFF',
+    kleurBatterij: '#B0B0B0',
     achtergrondKleur: '#000000',
     klokPositie: 'top-center', // Nieuwe standaard
     isDatumVisible: true,
