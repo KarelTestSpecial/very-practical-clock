@@ -1,0 +1,128 @@
+{
+    "extName": {
+        "message": "Clock Tab"
+    },
+    "extDescription": {
+        "message": "A customizable clock that opens in a new tab."
+    },
+    "htmlPageTitle": {
+        "message": "Clock Tab"
+    },
+    "toggleSecondsText": {
+        "message": "Toggle Seconds"
+    },
+    "toggleDateText": {
+        "message": "Toggle Date"
+    },
+    "toggleNotepadText": {
+        "message": "Toggle Notepad"
+    },
+    "toggleSettingsText": {
+        "message": "Settings"
+    },
+    "startScreensaverText": {
+        "message": "Start Screensaver"
+    },
+    "settingsTitleText": {
+        "message": "Settings"
+    },
+    "timeFontLabel": {
+        "message": "Time Font"
+    },
+    "timeSizeLabelText": {
+        "message": "Time Size"
+    },
+    "timeColorLabel": {
+        "message": "Time Color"
+    },
+    "dateFontLabel": {
+        "message": "Date Font"
+    },
+    "dateSizeLabelText": {
+        "message": "Date Size"
+    },
+    "dateColorLabel": {
+        "message": "Date Color"
+    },
+    "backgroundColorLabel": {
+        "message": "Background Color"
+    },
+    "notepadTextAlignLabel": {
+        "message": "Notepad Text Align"
+    },
+    "notepadFontLabel": {
+        "message": "Notepad Font"
+    },
+    "notepadSizeLabelText": {
+        "message": "Notepad Size"
+    },
+    "textAlignLeft": {
+        "message": "Left"
+    },
+    "textAlignCenter": {
+        "message": "Center"
+    },
+    "textAlignRight": {
+        "message": "Right"
+    },
+    "saveFavoritesText": {
+        "message": "Save as Favorite"
+    },
+    "defaultSettingsText": {
+        "message": "Restore Default"
+    },
+    "restoreFavoritesText": {
+        "message": "Restore Favorite"
+    },
+    "screensaverInstructionsTitle": {
+        "message": "Screensaver"
+    },
+    "screensaverInstructionsText": {
+        "message": "Click on the time, date or the button in settings to start/stop the screensaver."
+    },
+    "notepadPlaceholder": {
+        "message": "Your notes here..."
+    },
+    "positionLabel": {
+        "message": "Clock Position"
+    },
+    "posTopLeft": {
+        "message": "Top Left"
+    },
+    "posTopCenter": {
+        "message": "Top Center"
+    },
+    "posTopRight": {
+        "message": "Top Right"
+    },
+    "posCenterCenter": {
+        "message": "Center"
+    },
+    "posBottomLeft": {
+        "message": "Bottom Left"
+    },
+    "posBottomCenter": {
+        "message": "Bottom Center"
+    },
+    "posBottomRight": {
+        "message": "Bottom Right"
+    },
+    "alertFavoriteSaved": {
+        "message": "Favorite settings saved."
+    },
+    "alertFavoriteRestored": {
+        "message": "Favorite settings restored."
+    },
+    "alertNoFavoriteFound": {
+        "message": "No favorite settings found."
+    },
+    "tooltipOpenClock": {
+        "message": "Open Clock"
+    },
+    "dateLocale": {
+        "message": "en-US"
+    },
+    "toggleBatteryText": {
+        "message": "Toggle Battery"
+    }
+}
