@@ -96,7 +96,7 @@
         "message": "Restore Favorite"
     },
     "screensaverInstructionsTitle": {
-        "message": "Screensaver"
+        "message": "Screensaver:"
     },
     "screensaverInstructionsText": {
         "message": "Click on the time, date or the button in settings to start/stop the screensaver."

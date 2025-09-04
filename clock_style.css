@@ -271,18 +271,9 @@ body.position-bottom-center .instellingen-knoppen-groep {
 .instellingen-knoppen-groep button { flex: 1; min-width: 90px; max-width: 120px; padding: 5px 8px; }
 
 .screensaver-instructies {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid #444;
+    margin-top: 10px; /* Reduced margin */
     width: 100%;
     text-align: center;
-}
-
-.screensaver-instructies h4 {
-    margin-top: 0;
-    margin-bottom: 5px;
-    font-size: 0.95em;
-    color: #ddd;
 }
 
 .screensaver-instructies p {
@@ -290,6 +281,11 @@ body.position-bottom-center .instellingen-knoppen-groep {
     font-size: 0.85em;
     line-height: 1.4;
     color: #bbb;
+}
+
+.screensaver-instructies p strong {
+    color: #ddd; /* Formerly the h4 color */
+    font-weight: bold;
 }
 
 body.screensaver-active {
