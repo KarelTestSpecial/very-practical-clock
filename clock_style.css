@@ -64,6 +64,7 @@ body.position-bottom-right { justify-content: flex-end; align-items: flex-end; }
     margin-bottom: 2px;
     line-height: 1;
     text-align: inherit;
+    padding-bottom: 0px; /* Standaardwaarde, wordt overschreven door JS */
 }
 
 #notepad-container {

@@ -47,6 +47,9 @@
     "dateColorLabel": {
         "message": "Date Color"
     },
+    "datePaddingLabel": {
+        "message": "Padding Below Date"
+    },
     "batteryFontLabel": {
         "message": "Battery Font"
     },
@@ -58,6 +61,9 @@
     },
     "batteryWidthLabelText": {
         "message": "Battery Width"
+    },
+    "batteryPaddingLabel": {
+        "message": "Padding Below Battery"
     },
     "backgroundColorLabel": {
         "message": "Background Color"

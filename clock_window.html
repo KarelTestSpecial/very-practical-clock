@@ -90,6 +90,12 @@
                     </label>
                     <input type="range" id="grootte-datum" min="1.0" max="3.0" step="0.1">
                 </div>
+                <div class="instelling-item">
+                    <label for="padding-onder-datum">
+                        <span id="lblPaddingOnderDatumText"></span> <span id="weergave-padding-onder-datum"></span>
+                    </label>
+                    <input type="range" id="padding-onder-datum" min="0" max="50" step="1">
+                </div>
             </div>
 
             <div class="instelling-groep-horizontaal">
@@ -110,6 +116,12 @@
                         <span id="lblGrootteBatterijText"></span> <span id="weergave-grootte-batterij"></span>
                     </label>
                     <input type="range" id="grootte-batterij" min="1.0" max="3.0" step="0.1">
+                </div>
+                <div class="instelling-item">
+                    <label for="padding-onder-batterij">
+                        <span id="lblPaddingOnderBatterijText"></span> <span id="weergave-padding-onder-batterij"></span>
+                    </label>
+                    <input type="range" id="padding-onder-batterij" min="0" max="50" step="1">
                 </div>
             </div>
 
@@ -146,14 +158,15 @@
                     </label>
                     <input type="range" id="grootte-notepad" min="1.0" max="3.0" step="0.1">
                 </div>
+                <div class="instelling-item">
+                    <label for="notepad-text-align" id="lblNotepadTextAlign"></label>
+                    <select id="notepad-text-align">
+                        <option value="left" id="optTextAlignLeft"></option>
+                        <option value="center" id="optTextAlignCenter"></option>
+                        <option value="right" id="optTextAlignRight"></option>
+                    </select>
+                </div>
             </div>
-        
-            <label for="notepad-text-align" id="lblNotepadTextAlign"></label>
-            <select id="notepad-text-align">
-                <option value="left" id="optTextAlignLeft"></option>
-                <option value="center" id="optTextAlignCenter"></option>
-                <option value="right" id="optTextAlignRight"></option>
-            </select>
         
             <!-- GROEP 2: KLEUREN & POSITIE -->
             <div class="instelling-groep-horizontaal color-picker-groep">
