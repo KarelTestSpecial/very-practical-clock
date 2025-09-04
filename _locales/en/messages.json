@@ -53,6 +53,9 @@
     "batterySizeLabelText": {
         "message": "Battery Size"
     },
+    "batteryWidthLabelText": {
+        "message": "Battery Width"
+    },
     "backgroundColorLabel": {
         "message": "Background Color"
     },
