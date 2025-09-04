@@ -53,6 +53,7 @@ body.position-bottom-right { justify-content: flex-end; align-items: flex-end; }
     white-space: nowrap;
     line-height: 1;
     text-align: inherit;
+    padding-bottom: 0px; /* Standaardwaarde, wordt overschreven door JS */
 }
 
 #datum {

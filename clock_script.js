@@ -2,7 +2,7 @@
 // Globale DOM Element Referenties (na DOMContentLoaded)
 let tijdElement, datumElement, toggleSecondenKnop, toonInstellingenKnop, instellingenPaneel, batterijStatusElement, toggleBatterijKnop;
 let bewaarFavorietKnop, herstelStandaardKnop, herstelFavorietKnop;
-let fontTijdInput, grootteTijdInput, weergaveGrootteTijd, kleurTijdInput;
+let fontTijdInput, grootteTijdInput, weergaveGrootteTijd, kleurTijdInput, paddingOnderTijdInput, weergavePaddingOnderTijd;
 let fontDatumInput, grootteDatumInput, weergaveGrootteDatum, kleurDatumInput;
 let fontBatterijInput, kleurBatterijInput, grootteBatterijInput, weergaveGrootteBatterij, breedteBatterijInput, weergaveBreedteBatterij;
 let achtergrondKleurInput, klokContainer, notepadContainer, notepadArea, toggleNotepadKnop;
@@ -22,6 +22,7 @@ const standaardInstellingen = {
     toonBatterij: true,
     fontTijd: 'Verdana, sans-serif',
     grootteTijd: 4.0,
+    paddingOnderTijd: 0,
     kleurTijd: '#39FF14',
     fontDatum: 'Arial, sans-serif',
     grootteDatum: 1.2,
@@ -64,6 +65,8 @@ function initializeDOMReferences() {
     fontTijdInput = document.getElementById('font-tijd');
     grootteTijdInput = document.getElementById('grootte-tijd');
     weergaveGrootteTijd = document.getElementById('weergave-grootte-tijd');
+    paddingOnderTijdInput = document.getElementById('padding-onder-tijd');
+    weergavePaddingOnderTijd = document.getElementById('weergave-padding-onder-tijd');
     kleurTijdInput = document.getElementById('kleur-tijd');
     fontDatumInput = document.getElementById('font-datum');
     grootteDatumInput = document.getElementById('grootte-datum');
@@ -97,6 +100,7 @@ function applyTranslations() {
     document.getElementById('settingsTitleText').textContent = chrome.i18n.getMessage('settingsTitleText');
     document.getElementById('lblFontTijd').textContent = chrome.i18n.getMessage('timeFontLabel');
     document.getElementById('lblGrootteTijdText').textContent = chrome.i18n.getMessage('timeSizeLabelText');
+    document.getElementById('lblPaddingOnderTijdText').textContent = chrome.i18n.getMessage('timePaddingLabel');
     document.getElementById('lblKleurTijd').textContent = chrome.i18n.getMessage('timeColorLabel');
     document.getElementById('lblFontDatum').textContent = chrome.i18n.getMessage('dateFontLabel');
     document.getElementById('lblGrootteDatumText').textContent = chrome.i18n.getMessage('dateSizeLabelText');
@@ -152,6 +156,7 @@ function applyAllSettings(settings) {
         tijdElement.style.fontFamily = settings.fontTijd;
         tijdElement.style.color = settings.kleurTijd;
         tijdElement.style.fontSize = settings.grootteTijd + 'em';
+        tijdElement.style.paddingBottom = settings.paddingOnderTijd + 'px';
     }
     if (datumElement) {
         datumElement.style.fontFamily = settings.fontDatum;
@@ -169,6 +174,8 @@ function applyAllSettings(settings) {
     if (fontTijdInput) fontTijdInput.value = settings.fontTijd;
     if (grootteTijdInput) grootteTijdInput.value = settings.grootteTijd;
     if (weergaveGrootteTijd) weergaveGrootteTijd.textContent = settings.grootteTijd + 'em';
+    if (paddingOnderTijdInput) paddingOnderTijdInput.value = settings.paddingOnderTijd;
+    if (weergavePaddingOnderTijd) weergavePaddingOnderTijd.textContent = settings.paddingOnderTijd + 'px';
     if (kleurTijdInput) kleurTijdInput.value = settings.kleurTijd;
     if (fontDatumInput) fontDatumInput.value = settings.fontDatum;
     if (grootteDatumInput) grootteDatumInput.value = settings.grootteDatum;
@@ -224,6 +231,9 @@ async function applyAndSaveSetting(key, value, element, styleProperty) {
             else if (key === 'grootteDatum' && weergaveGrootteDatum) weergaveGrootteDatum.textContent = finalValue;
             else if (key === 'grootteBatterij' && weergaveGrootteBatterij) weergaveGrootteBatterij.textContent = finalValue;
             else if (key === 'grootteNotepad' && weergaveGrootteNotepad) weergaveGrootteNotepad.textContent = finalValue;
+        } else if (key === 'paddingOnderTijd') {
+            finalValue = value + 'px';
+            if (weergavePaddingOnderTijd) weergavePaddingOnderTijd.textContent = finalValue;
         } else if (key === 'breedteBatterij') {
             finalValue = `scaleX(${value})`;
             if (weergaveBreedteBatterij) weergaveBreedteBatterij.textContent = value;
@@ -292,6 +302,7 @@ async function bewaarFavorieteInstellingen() {
         isDatumVisible: (isDatumVisible === undefined) ? standaardInstellingen.isDatumVisible : isDatumVisible,
         fontTijd: fontTijdInput.value,
         grootteTijd: parseFloat(grootteTijdInput.value),
+        paddingOnderTijd: parseInt(paddingOnderTijdInput.value),
         kleurTijd: kleurTijdInput.value,
         fontDatum: fontDatumInput.value,
         grootteDatum: parseFloat(grootteDatumInput.value),
@@ -468,6 +479,7 @@ function setupEventListeners() {
 
     fontTijdInput.addEventListener('input', (e) => applyAndSaveSetting('fontTijd', e.target.value, tijdElement, 'fontFamily'));
     grootteTijdInput.addEventListener('input', (e) => applyAndSaveSetting('grootteTijd', parseFloat(e.target.value), tijdElement, 'fontSize'));
+    paddingOnderTijdInput.addEventListener('input', (e) => applyAndSaveSetting('paddingOnderTijd', parseInt(e.target.value), tijdElement, 'paddingBottom'));
     fontDatumInput.addEventListener('input', (e) => applyAndSaveSetting('fontDatum', e.target.value, datumElement, 'fontFamily'));
     grootteDatumInput.addEventListener('input', (e) => applyAndSaveSetting('grootteDatum', parseFloat(e.target.value), datumElement, 'fontSize'));
     fontBatterijInput.addEventListener('input', (e) => applyAndSaveSetting('fontBatterij', e.target.value, batterijStatusElement, 'fontFamily'));

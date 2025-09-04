@@ -35,6 +35,9 @@
     "timeColorLabel": {
         "message": "Time Color"
     },
+    "timePaddingLabel": {
+        "message": "Padding Below Time"
+    },
     "dateFontLabel": {
         "message": "Date Font"
     },
