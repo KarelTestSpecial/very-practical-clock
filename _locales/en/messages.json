@@ -35,6 +35,9 @@
     "timeColorLabel": {
         "message": "Time Color"
     },
+    "timePaddingLabel": {
+        "message": "Padding Below Time"
+    },
     "dateFontLabel": {
         "message": "Date Font"
     },
@@ -43,6 +46,9 @@
     },
     "dateColorLabel": {
         "message": "Date Color"
+    },
+    "datePaddingLabel": {
+        "message": "Padding Below Date"
     },
     "batteryFontLabel": {
         "message": "Battery Font"
@@ -55,6 +61,9 @@
     },
     "batteryWidthLabelText": {
         "message": "Battery Width"
+    },
+    "batteryPaddingLabel": {
+        "message": "Padding Below Battery"
     },
     "backgroundColorLabel": {
         "message": "Background Color"
@@ -87,7 +96,7 @@
         "message": "Restore Favorite"
     },
     "screensaverInstructionsTitle": {
-        "message": "Screensaver"
+        "message": "Screensaver:"
     },
     "screensaverInstructionsText": {
         "message": "Click on the time, date or the button in settings to start/stop the screensaver."
