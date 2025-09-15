@@ -4,10 +4,13 @@ let klokWindowId = null;
 chrome.action.onClicked.addListener(async (tab) => {
   if (klokWindowId !== null) {
     try {
-      await chrome.windows.update(klokWindowId, { focused: true });
-      return;
+      // Probeer het bestaande venster te sluiten
+      await chrome.windows.remove(klokWindowId);
+      return; // Stop de uitvoering hier, de onRemoved listener doet de rest.
     } catch (e) {
-      console.warn("Kon bestaand venster niet updaten (mogelijk al gesloten):", e.message);
+      // Dit kan gebeuren als het venster handmatig is gesloten
+      console.warn("Kon venster niet sluiten (mogelijk al gesloten):", e.message);
+      // Zorg ervoor dat we de ID resetten, zodat de volgende klik een nieuw venster opent
       klokWindowId = null;
     }
   }
