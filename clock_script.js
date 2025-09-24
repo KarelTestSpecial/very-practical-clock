@@ -1,6 +1,6 @@
 
 // Globale DOM Element Referenties (na DOMContentLoaded)
-let tijdElement, datumElement, toggleSecondenKnop, toonInstellingenKnop, instellingenPaneel, batterijStatusElement, toggleBatterijKnop;
+let tijdElement, datumElement, toggleSecondenKnop, toonInstellingenKnop, instellingenPaneel, batterijStatusElement, toggleBatterijKnop, toggleDagNaamKnop;
 let bewaarFavorietKnop, herstelStandaardKnop, herstelFavorietKnop;
 let fontTijdInput, grootteTijdInput, weergaveGrootteTijd, kleurTijdInput, paddingOnderTijdInput, weergavePaddingOnderTijd;
 let fontDatumInput, grootteDatumInput, weergaveGrootteDatum, kleurDatumInput, paddingOnderDatumInput, weergavePaddingOnderDatum;
@@ -20,6 +20,7 @@ let windowResizeTimer = null;
 const standaardInstellingen = {
     toonSeconden: false,
     toonBatterij: true,
+    showDayOfWeek: true,
     fontTijd: 'Verdana, sans-serif',
     grootteTijd: 4.0,
     paddingOnderTijd: 0,
@@ -55,6 +56,7 @@ function initializeDOMReferences() {
     // Knoppen
     toggleSecondenKnop = document.getElementById('toggle-seconden');
     toggleDatumKnop = document.getElementById('toggle-datum');
+    toggleDagNaamKnop = document.getElementById('toggle-dag-naam');
     toggleNotepadKnop = document.getElementById('toggle-notepad');
     toggleBatterijKnop = document.getElementById('toggle-batterij');
     toonInstellingenKnop = document.getElementById('toon-instellingen');
@@ -100,6 +102,7 @@ function applyTranslations() {
     toggleSecondenKnop.textContent = chrome.i18n.getMessage('toggleSecondsText');
     if (toggleBatterijKnop) toggleBatterijKnop.textContent = chrome.i18n.getMessage('toggleBatteryText');
     toggleDatumKnop.textContent = chrome.i18n.getMessage('toggleDateText');
+    toggleDagNaamKnop.textContent = chrome.i18n.getMessage('toggleDayOfWeekText');
     toggleNotepadKnop.textContent = chrome.i18n.getMessage('toggleNotepadText');
     toonInstellingenKnop.textContent = chrome.i18n.getMessage('toggleSettingsText');
     startScreensaverKnop.textContent = chrome.i18n.getMessage('startScreensaverText');
@@ -261,7 +264,7 @@ async function applyAndSaveSetting(key, value, element, styleProperty) {
     await chrome.storage.local.set({ [key]: value });
 }
 
-function updateKlok() {
+async function updateKlok() {
     if (!tijdElement || !datumElement) return;
     if (toonBatterij) updateBatteryStatus();
     const nu = new Date();
@@ -273,7 +276,18 @@ function updateKlok() {
     }
     tijdElement.textContent = tijdString;
     const currentLocale = chrome.i18n.getMessage('dateLocale');
-    const optiesDatum = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+    const { showDayOfWeek } = await chrome.storage.local.get('showDayOfWeek');
+    const finalShowDayOfWeek = showDayOfWeek === undefined ? standaardInstellingen.showDayOfWeek : showDayOfWeek;
+
+    const optiesDatum = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    };
+    if (finalShowDayOfWeek) {
+        optiesDatum.weekday = 'long';
+    }
     datumElement.textContent = nu.toLocaleDateString(currentLocale, optiesDatum);
 }
 
@@ -290,6 +304,13 @@ async function toggleUserPreferenceNotepad() {
     const nieuweVoorkeur = isNotepadVisible === undefined ? !standaardInstellingen.isNotepadVisible : !isNotepadVisible;
     await chrome.storage.local.set({ isNotepadVisible: nieuweVoorkeur });
     await updateActualNotepadVisibility();
+}
+
+async function toggleDayOfWeek() {
+    let { showDayOfWeek } = await chrome.storage.local.get('showDayOfWeek');
+    const newShowDayOfWeek = showDayOfWeek === undefined ? !standaardInstellingen.showDayOfWeek : !showDayOfWeek;
+    await chrome.storage.local.set({ showDayOfWeek: newShowDayOfWeek });
+    await updateKlok();
 }
 
 function toggleInstellingenPaneel() {
@@ -483,6 +504,7 @@ function setupEventListeners() {
         applyDatumVisibility(nieuweZichtbaarheid);
         await chrome.storage.local.set({ isDatumVisible: nieuweZichtbaarheid });
     });
+    toggleDagNaamKnop.addEventListener('click', toggleDayOfWeek);
     toonInstellingenKnop.addEventListener('click', toggleInstellingenPaneel);
     bewaarFavorietKnop.addEventListener('click', bewaarFavorieteInstellingen);
     herstelStandaardKnop.addEventListener('click', herstelStandaardInstellingen);
