@@ -2,6 +2,10 @@
 
 A simple, clean, and highly customizable clock that opens in a new tab. Designed to be practical and easy on the eyes, it provides just the information you need with a host of personalization options.
 
+## Usage
+
+Click the clock icon in your browser's toolbar to open the clock window. Clicking the icon again will close it.
+
 ## Features
 
 - **Clear Digital Clock:** A large, easy-to-read digital clock is the centerpiece of the extension.
