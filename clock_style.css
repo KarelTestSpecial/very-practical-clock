@@ -153,22 +153,37 @@ button:hover {
     background-color: #222;
     color: #eee;
     width: 98%;
-    max-width: 560px; /* Verbreed */
+    max-width: 480px; /* Aangepaste breedte voor compacte layout */
     box-sizing: border-box;
     font-size: 1em;
     display: flex;
-    flex-direction: row; /* Hoofdrichting is nu rij */
-    flex-wrap: wrap;     /* Sta wrapping toe */
-    gap: 20px;           /* Ruimte tussen de kolommen */
-    align-items: flex-start; /* Lijn items aan de bovenkant uit */
-    transition: align-items 0.5s ease-in-out;
+    flex-direction: column; /* Hoofdrichting is kolom */
+    gap: 8px; /* Ruimte tussen de rijen */
+    align-items: stretch; /* Stretch items om de breedte te vullen */
 }
 
-.instellingen-kolom {
+.instellingen-rij {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.instelling-groep {
     display: flex;
     flex-direction: column;
-    flex: 1; /* Zorgt ervoor dat kolommen de ruimte delen */
-    min-width: 200px; /* Minimale breedte voor een kolom */
+    gap: 5px;
+    border: 1px solid #444;
+    padding: 8px;
+    border-radius: 4px;
+    flex: 1; /* Groepen delen de ruimte gelijkmatig */
+}
+
+.instelling-groep h4 {
+    margin: 0 0 5px 0;
+    font-size: 0.9em;
+    font-weight: bold;
+    text-align: center;
 }
 
 .instellingen-paneel.hidden {
