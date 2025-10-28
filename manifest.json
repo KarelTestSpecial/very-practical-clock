@@ -12,7 +12,8 @@
   "permissions": [
     "windows",
     "storage",
-    "system.display"
+    "system.display",
+    "alarms"
   ],
   "background": {
     "service_worker": "background.js"

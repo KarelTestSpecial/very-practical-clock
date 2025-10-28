@@ -22,20 +22,46 @@
         </div>
 
         <div class="instellingen-paneel hidden">
-            <h3 id="settingsTitleText"></h3>
+            <!-- Kolom 1: Acties & Algemeen -->
+            <div class="instellingen-kolom">
+                <h3 id="settingsTitleText"></h3>
+                <div class="instellingen-acties-groep">
+                    <button id="toggle-seconden"></button>
+                    <button id="toggle-notepad"></button>
+                    <button id="toggle-datum"></button>
+                    <button id="toggle-dag-naam"></button>
+                    <button id="toggle-batterij"></button>
+                </div>
+                <button id="start-screensaver" class="screensaver-knop-in-paneel"></button>
 
-            <!-- GROEP 0: ACTIES (NU MET 3 KNOPPEN OP EEN RIJ) -->
-            <div class="instellingen-acties-groep">
-                <button id="toggle-seconden"></button>
-                <button id="toggle-notepad"></button>
-                <button id="toggle-datum"></button>
-                <button id="toggle-dag-naam"></button>
-                <button id="toggle-batterij"></button>
+                <label for="klok-positie-select" id="lblKlokPositie"></label>
+                <select id="klok-positie-select">
+                    <option value="top-left" id="optPosTopLeft"></option>
+                    <option value="top-center" id="optPosTopCenter"></option>
+                    <option value="top-right" id="optPosTopRight"></option>
+                    <option value="center-center" id="optPosCenterCenter"></option>
+                    <option value="bottom-left" id="optPosBottomLeft"></option>
+                    <option value="bottom-center" id="optPosBottomCenter"></option>
+                    <option value="bottom-right" id="optPosBottomRight"></option>
+                </select>
+
+                <div class="instellingen-knoppen-groep">
+                    <button id="bewaar-favoriet"></button>
+                    <button id="herstel-standaard"></button>
+                    <button id="herstel-favoriet"></button>
+                </div>
+
+                <div class="screensaver-instructies">
+                    <p>
+                        <strong id="screensaverInstructionsTitle"></strong>
+                        <span id="screensaverInstructionsText"></span>
+                    </p>
+                </div>
             </div>
-            <button id="start-screensaver" class="screensaver-knop-in-paneel"></button>
-        
-            <!-- GROEP 1: LETTERTYPES & GROOTTES -->
-            <div class="instelling-groep-horizontaal">
+
+            <!-- Kolom 2: Opmaak & Kleuren -->
+            <div class="instellingen-kolom">
+                <!-- Tijd Instellingen -->
                 <div class="instelling-item">
                     <label for="font-tijd" id="lblFontTijd"></label>
                     <select id="font-tijd">
@@ -53,21 +79,22 @@
                         <option value="serif">Default Serif</option>
                     </select>
                 </div>
-                <div class="instelling-item">
-                    <label for="grootte-tijd">
-                        <span id="lblGrootteTijdText"></span> <span id="weergave-grootte-tijd"></span>
-                    </label>
-                    <input type="range" id="grootte-tijd" min="1.0" max="7.0" step="0.1">
+                <div class="instelling-groep-horizontaal">
+                    <div class="instelling-item">
+                        <label for="grootte-tijd"><span id="lblGrootteTijdText"></span> <span id="weergave-grootte-tijd"></span></label>
+                        <input type="range" id="grootte-tijd" min="1.0" max="7.0" step="0.1">
+                    </div>
+                    <div class="instelling-item">
+                        <label for="kleur-tijd" id="lblKleurTijd"></label>
+                        <input type="color" id="kleur-tijd">
+                    </div>
                 </div>
-                <div class="instelling-item">
-                    <label for="padding-onder-tijd">
-                        <span id="lblPaddingOnderTijdText"></span> <span id="weergave-padding-onder-tijd"></span>
-                    </label>
+                 <div class="instelling-item">
+                    <label for="padding-onder-tijd"><span id="lblPaddingOnderTijdText"></span> <span id="weergave-padding-onder-tijd"></span></label>
                     <input type="range" id="padding-onder-tijd" min="0" max="50" step="1">
                 </div>
-            </div>
-        
-            <div class="instelling-groep-horizontaal">
+
+                <!-- Datum Instellingen -->
                 <div class="instelling-item">
                     <label for="font-datum" id="lblFontDatum"></label>
                     <select id="font-datum">
@@ -85,21 +112,22 @@
                         <option value="serif">Default Serif</option>
                     </select>
                 </div>
-                <div class="instelling-item">
-                    <label for="grootte-datum">
-                        <span id="lblGrootteDatumText"></span> <span id="weergave-grootte-datum"></span>
-                    </label>
-                    <input type="range" id="grootte-datum" min="1.0" max="3.0" step="0.1">
+                <div class="instelling-groep-horizontaal">
+                    <div class="instelling-item">
+                        <label for="grootte-datum"><span id="lblGrootteDatumText"></span> <span id="weergave-grootte-datum"></span></label>
+                        <input type="range" id="grootte-datum" min="1.0" max="3.0" step="0.1">
+                    </div>
+                    <div class="instelling-item">
+                        <label for="kleur-datum" id="lblKleurDatum"></label>
+                        <input type="color" id="kleur-datum">
+                    </div>
                 </div>
                 <div class="instelling-item">
-                    <label for="padding-onder-datum">
-                        <span id="lblPaddingOnderDatumText"></span> <span id="weergave-padding-onder-datum"></span>
-                    </label>
+                    <label for="padding-onder-datum"><span id="lblPaddingOnderDatumText"></span> <span id="weergave-padding-onder-datum"></span></label>
                     <input type="range" id="padding-onder-datum" min="0" max="50" step="1">
                 </div>
-            </div>
 
-            <div class="instelling-groep-horizontaal">
+                <!-- Batterij Instellingen -->
                 <div class="instelling-item">
                     <label for="font-batterij" id="lblFontBatterij"></label>
                     <select id="font-batterij">
@@ -112,30 +140,28 @@
                         <option value="sans-serif">Default Sans-serif</option>
                     </select>
                 </div>
-                <div class="instelling-item">
-                    <label for="grootte-batterij">
-                        <span id="lblGrootteBatterijText"></span> <span id="weergave-grootte-batterij"></span>
-                    </label>
-                    <input type="range" id="grootte-batterij" min="1.0" max="3.0" step="0.1">
+                <div class="instelling-groep-horizontaal">
+                    <div class="instelling-item">
+                        <label for="grootte-batterij"><span id="lblGrootteBatterijText"></span> <span id="weergave-grootte-batterij"></span></label>
+                        <input type="range" id="grootte-batterij" min="1.0" max="3.0" step="0.1">
+                    </div>
+                    <div class="instelling-item">
+                        <label for="kleur-batterij" id="lblKleurBatterij"></label>
+                        <input type="color" id="kleur-batterij">
+                    </div>
                 </div>
-                <div class="instelling-item">
-                    <label for="padding-onder-batterij">
-                        <span id="lblPaddingOnderBatterijText"></span> <span id="weergave-padding-onder-batterij"></span>
-                    </label>
-                    <input type="range" id="padding-onder-batterij" min="0" max="50" step="1">
+                 <div class="instelling-groep-horizontaal">
+                    <div class="instelling-item">
+                        <label for="breedte-batterij"><span id="lblBreedteBatterijText"></span> <span id="weergave-breedte-batterij"></span></label>
+                        <input type="range" id="breedte-batterij" min="0.5" max="2.5" step="0.05">
+                    </div>
+                     <div class="instelling-item">
+                        <label for="padding-onder-batterij"><span id="lblPaddingOnderBatterijText"></span> <span id="weergave-padding-onder-batterij"></span></label>
+                        <input type="range" id="padding-onder-batterij" min="0" max="50" step="1">
+                    </div>
                 </div>
-            </div>
 
-            <div class="instelling-groep-horizontaal">
-                <div class="instelling-item">
-                    <label for="breedte-batterij">
-                        <span id="lblBreedteBatterijText"></span> <span id="weergave-breedte-batterij"></span>
-                    </label>
-                    <input type="range" id="breedte-batterij" min="0.5" max="2.5" step="0.05">
-                </div>
-            </div>
-
-            <div class="instelling-groep-horizontaal">
+                <!-- Notepad Instellingen -->
                 <div class="instelling-item">
                     <label for="font-notepad" id="lblFontNotepad"></label>
                     <select id="font-notepad">
@@ -153,70 +179,77 @@
                         <option value="serif">Default Serif</option>
                     </select>
                 </div>
-                <div class="instelling-item">
-                    <label for="grootte-notepad">
-                        <span id="lblGrootteNotepadText"></span> <span id="weergave-grootte-notepad"></span>
-                    </label>
-                    <input type="range" id="grootte-notepad" min="1.0" max="3.0" step="0.1">
+                 <div class="instelling-groep-horizontaal">
+                     <div class="instelling-item">
+                        <label for="grootte-notepad"><span id="lblGrootteNotepadText"></span> <span id="weergave-grootte-notepad"></span></label>
+                        <input type="range" id="grootte-notepad" min="1.0" max="3.0" step="0.1">
+                    </div>
+                    <div class="instelling-item">
+                        <label for="notepad-text-align" id="lblNotepadTextAlign"></label>
+                        <select id="notepad-text-align">
+                            <option value="left" id="optTextAlignLeft"></option>
+                            <option value="center" id="optTextAlignCenter"></option>
+                            <option value="right" id="optTextAlignRight"></option>
+                        </select>
+                    </div>
                 </div>
-                <div class="instelling-item">
-                    <label for="notepad-text-align" id="lblNotepadTextAlign"></label>
-                    <select id="notepad-text-align">
-                        <option value="left" id="optTextAlignLeft"></option>
-                        <option value="center" id="optTextAlignCenter"></option>
-                        <option value="right" id="optTextAlignRight"></option>
-                    </select>
-                </div>
-            </div>
-        
-            <!-- GROEP 2: KLEUREN & POSITIE -->
-            <div class="instelling-groep-horizontaal color-picker-groep">
-                <div class="instelling-item">
-                    <label for="kleur-tijd" id="lblKleurTijd"></label>
-                    <input type="color" id="kleur-tijd">
-                </div>
-                <div class="instelling-item">
-                    <label for="kleur-datum" id="lblKleurDatum"></label>
-                    <input type="color" id="kleur-datum">
-                </div>
-            </div>
 
-            <div class="instelling-groep-horizontaal color-picker-groep">
-                <div class="instelling-item">
-                    <label for="kleur-batterij" id="lblKleurBatterij"></label>
-                    <input type="color" id="kleur-batterij">
-                </div>
+                <!-- Algemene Kleur -->
                 <div class="instelling-item">
                     <label for="achtergrond-kleur" id="lblAchtergrondKleur"></label>
                     <input type="color" id="achtergrond-kleur">
                 </div>
             </div>
 
-            <!-- NIEUW: POSITIE KEUZEMENU -->
-            <label for="klok-positie-select" id="lblKlokPositie"></label>
-            <select id="klok-positie-select">
-                <option value="top-left" id="optPosTopLeft"></option>
-                <option value="top-center" id="optPosTopCenter"></option>
-                <option value="top-right" id="optPosTopRight"></option>
-                <option value="center-center" id="optPosCenterCenter"></option>
-                <option value="bottom-left" id="optPosBottomLeft"></option>
-                <option value="bottom-center" id="optPosBottomCenter"></option>
-                <option value="bottom-right" id="optPosBottomRight"></option>
-            </select>
-        
-            <!-- GROEP 3: INSTRUCTIES -->
-            <div class="screensaver-instructies">
-                <p>
-                    <strong id="screensaverInstructionsTitle"></strong>
-                    <span id="screensaverInstructionsText"></span>
-                </p>
-            </div>
-        
-            <!-- GROEP 4: KNOPPEN -->
-            <div class="instellingen-knoppen-groep">
-                <button id="bewaar-favoriet"></button>
-                <button id="herstel-standaard"></button>
-                <button id="herstel-favoriet"></button>
+            <!-- Kolom 3: Alarmen -->
+            <div class="instellingen-kolom">
+                <h3>Alarms</h3>
+                <!-- Alarm 1 -->
+                <div class="alarm-container">
+                    <div class="alarm-header">
+                        <label for="alarm-tijd-1">Alarm 1</label>
+                        <input type="time" id="alarm-tijd-1">
+                        <label class="switch">
+                            <input type="checkbox" id="alarm-toggle-1">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="instelling-item">
+                        <label for="alarm-geluid-1">Sound</label>
+                        <select id="alarm-geluid-1">
+                            <option value="beep">Beep</option>
+                            <option value="bell">Bell</option>
+                            <option value="digital">Digital</option>
+                        </select>
+                    </div>
+                    <div class="instelling-item">
+                        <label for="alarm-duur-1">Duration (s)</label>
+                        <input type="number" id="alarm-duur-1" min="1" max="60" value="5">
+                    </div>
+                </div>
+                <!-- Alarm 2 -->
+                <div class="alarm-container">
+                    <div class="alarm-header">
+                        <label for="alarm-tijd-2">Alarm 2</label>
+                        <input type="time" id="alarm-tijd-2">
+                        <label class="switch">
+                            <input type="checkbox" id="alarm-toggle-2">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="instelling-item">
+                        <label for="alarm-geluid-2">Sound</label>
+                        <select id="alarm-geluid-2">
+                            <option value="beep">Beep</option>
+                            <option value="bell">Bell</option>
+                            <option value="digital">Digital</option>
+                        </select>
+                    </div>
+                    <div class="instelling-item">
+                        <label for="alarm-duur-2">Duration (s)</label>
+                        <input type="number" id="alarm-duur-2" min="1" max="60" value="5">
+                    </div>
+                </div>
             </div>
         </div>
     </div>

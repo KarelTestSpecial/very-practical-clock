@@ -15,6 +15,7 @@ let isScreensaverActive = false;
 let screensaverIntervalId = null;
 let statusMessageTimeoutId = null;
 let windowResizeTimer = null;
+let currentAlarmAudio = null; // Voor het bijhouden van het spelende alarmgeluid
 
 // Standaardinstellingen (positie aangepast)
 const standaardInstellingen = {
@@ -43,6 +44,18 @@ const standaardInstellingen = {
     fontNotepad: 'Arial, sans-serif',
     grootteNotepad: 1.5,
     notepadHeight: null,
+    alarm1Settings: {
+        enabled: false,
+        time: '08:00',
+        sound: 'digital',
+        duration: 10
+    },
+    alarm2Settings: {
+        enabled: false,
+        time: '18:00',
+        sound: 'bell',
+        duration: 5
+    }
 };
 
 function initializeDOMReferences() {
@@ -94,6 +107,14 @@ function initializeDOMReferences() {
     fontNotepadInput = document.getElementById('font-notepad');
     grootteNotepadInput = document.getElementById('grootte-notepad');
     weergaveGrootteNotepad = document.getElementById('weergave-grootte-notepad');
+
+    // Alarmen
+    for (let i = 1; i <= 2; i++) {
+        document.getElementById(`alarm-tijd-${i}`).addEventListener('change', (e) => saveAlarmSetting(i, 'time', e.target.value));
+        document.getElementById(`alarm-toggle-${i}`).addEventListener('change', (e) => saveAlarmSetting(i, 'enabled', e.target.checked));
+        document.getElementById(`alarm-geluid-${i}`).addEventListener('change', (e) => saveAlarmSetting(i, 'sound', e.target.value));
+        document.getElementById(`alarm-duur-${i}`).addEventListener('change', (e) => saveAlarmSetting(i, 'duration', parseInt(e.target.value)));
+    }
 }
 
 function applyTranslations() {
@@ -236,7 +257,40 @@ async function laadInstellingen() {
     if (opgeslagenInstellingen.notepadHeight && notepadArea) {
         notepadArea.style.height = `${opgeslagenInstellingen.notepadHeight}px`;
     }
+    // Laad en pas alarm instellingen toe
+    for (let i = 1; i <= 2; i++) {
+        const settings = opgeslagenInstellingen[`alarm${i}Settings`];
+        document.getElementById(`alarm-tijd-${i}`).value = settings.time;
+        document.getElementById(`alarm-toggle-${i}`).checked = settings.enabled;
+        document.getElementById(`alarm-geluid-${i}`).value = settings.sound;
+        document.getElementById(`alarm-duur-${i}`).value = settings.duration;
+    }
+
     await updateActualNotepadVisibility();
+}
+
+async function saveAlarmSetting(alarmNum, key, value) {
+    const alarmSettingsKey = `alarm${alarmNum}Settings`;
+    const { [alarmSettingsKey]: settings } = await chrome.storage.local.get(alarmSettingsKey);
+    const newSettings = { ...settings, [key]: value };
+    await chrome.storage.local.set({ [alarmSettingsKey]: newSettings });
+
+    const alarmName = `alarm-${alarmNum}`;
+
+    if (newSettings.enabled) {
+        const [hours, minutes] = newSettings.time.split(':');
+        const now = new Date();
+        const alarmTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0, 0);
+
+        if (alarmTime <= now) {
+            // Als de tijd al voorbij is vandaag, stel het alarm in voor morgen
+            alarmTime.setDate(alarmTime.getDate() + 1);
+        }
+
+        chrome.runtime.sendMessage({ action: 'set-alarm', alarmName: alarmName, when: alarmTime.getTime() });
+    } else {
+        chrome.runtime.sendMessage({ action: 'clear-alarm', alarmName: alarmName });
+    }
 }
 
 async function applyAndSaveSetting(key, value, element, styleProperty) {
@@ -355,7 +409,19 @@ async function bewaarFavorieteInstellingen() {
         notepadTextAlign: notepadTextAlignSelect.value,
         fontNotepad: fontNotepadInput.value,
         grootteNotepad: parseFloat(grootteNotepadInput.value),
-        notepadHeight: notepadArea ? notepadArea.offsetHeight : null
+        notepadHeight: notepadArea ? notepadArea.offsetHeight : null,
+        alarm1Settings: {
+            enabled: document.getElementById('alarm-toggle-1').checked,
+            time: document.getElementById('alarm-tijd-1').value,
+            sound: document.getElementById('alarm-geluid-1').value,
+            duration: parseInt(document.getElementById('alarm-duur-1').value)
+        },
+        alarm2Settings: {
+            enabled: document.getElementById('alarm-toggle-2').checked,
+            time: document.getElementById('alarm-tijd-2').value,
+            sound: document.getElementById('alarm-geluid-2').value,
+            duration: parseInt(document.getElementById('alarm-duur-2').value)
+        }
     };
     await chrome.storage.local.set({ favorieteInstellingen: huidigeInstellingen });
     showStatusMessage(chrome.i18n.getMessage('alertFavoriteSaved'));
@@ -371,6 +437,7 @@ async function herstelStandaardInstellingen() {
     const instellingenOmOpTeSlaan = { ...standaardInstellingen };
     delete instellingenOmOpTeSlaan.notepadContent;
     await chrome.storage.local.set({ ...instellingenOmOpTeSlaan, notepadHeight: null });
+    await laadInstellingen(); // Herlaad alles om de UI te updaten
     await updateActualNotepadVisibility();
 }
 
@@ -383,17 +450,12 @@ async function herstelFavorieteInstellingen() {
             ...favorieteInstellingen,
             notepadContent: notepadArea ? notepadArea.value : ''
         };
-        applyAllSettings(settingsToApply);
-        applyDatumVisibility(settingsToApply.isDatumVisible);
-        applyNotepadSettings(settingsToApply);
-        if (settingsToApply.notepadHeight && notepadArea) {
-            notepadArea.style.height = `${settingsToApply.notepadHeight}px`;
-        } else if (notepadArea) {
-            notepadArea.style.height = '';
-        }
+
         const settingsToSave = { ...settingsToApply };
         delete settingsToSave.notepadContent;
+
         await chrome.storage.local.set(settingsToSave);
+        await laadInstellingen(); // Herlaad alles om de UI te updaten
         await updateActualNotepadVisibility();
         showStatusMessage(chrome.i18n.getMessage('alertFavoriteRestored'));
     } else {
@@ -582,5 +644,37 @@ async function initializeClock() {
     setupEventListeners();
     setInterval(updateKlok, 1000);
 }
+
+// --- Alarm Sound Functionaliteit ---
+async function playAlarmSound(alarmName) {
+    if (currentAlarmAudio) {
+        currentAlarmAudio.pause();
+        currentAlarmAudio = null;
+    }
+
+    const alarmSettingsKey = alarmName === 'alarm-1' ? 'alarm1Settings' : 'alarm2Settings';
+    const { [alarmSettingsKey]: settings } = await chrome.storage.local.get(alarmSettingsKey);
+
+    if (settings && settings.enabled) {
+        const soundFile = `sounds/${settings.sound}.mp3`;
+        currentAlarmAudio = new Audio(chrome.runtime.getURL(soundFile));
+        currentAlarmAudio.loop = true;
+        currentAlarmAudio.play();
+
+        setTimeout(() => {
+            if (currentAlarmAudio) {
+                currentAlarmAudio.pause();
+                currentAlarmAudio = null;
+            }
+        }, settings.duration * 1000); // Converteer seconden naar milliseconden
+    }
+}
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === 'play-alarm-sound') {
+        playAlarmSound(request.alarmName);
+    }
+});
+
 
 document.addEventListener('DOMContentLoaded', initializeClock);
