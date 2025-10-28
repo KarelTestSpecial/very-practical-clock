@@ -117,9 +117,6 @@ function initializeDOMReferences() {
         document.getElementById(`alarm-toggle-${i}`).addEventListener('change', (e) => saveAlarmSetting(i, 'enabled', e.target.checked));
         document.getElementById(`alarm-geluid-${i}`).addEventListener('change', (e) => saveAlarmSetting(i, 'sound', e.target.value));
         document.getElementById(`alarm-duur-${i}`).addEventListener('change', (e) => saveAlarmSetting(i, 'duration', parseInt(e.target.value)));
-        document.getElementById(`test-alarm-${i}`).addEventListener('click', () => {
-            chrome.runtime.sendMessage({ action: 'test-alarm', alarmName: `alarm-${i}` });
-        });
     }
 }
 

@@ -2,7 +2,6 @@ const OFFSCREEN_DOCUMENT_PATH = '/offscreen.html';
 
 // --- Window Management ---
 
-// Helper to find an existing clock window
 async function findClockWindow() {
     const windows = await chrome.windows.getAll({ populate: true });
     const clockWindowUrl = chrome.runtime.getURL("clock_window.html");
@@ -21,10 +20,7 @@ async function createClockWindow() {
 
   const screenInfo = await chrome.system.display.getInfo();
   const primaryDisplay = screenInfo.find(display => display.isPrimary) || screenInfo[0];
-  if (!primaryDisplay) {
-    console.error("No display information found.");
-    return null;
-  }
+  if (!primaryDisplay) { return null; }
   const screenWidth = primaryDisplay.bounds.width;
   const screenHeight = primaryDisplay.bounds.height;
 
@@ -39,7 +35,6 @@ async function createClockWindow() {
       focused: true,
     });
   } catch (error) {
-    console.error("Error creating window:", error.message);
     return null;
   }
 }
@@ -50,7 +45,7 @@ chrome.action.onClicked.addListener(async () => {
         try {
             await chrome.windows.remove(existingWindow.id);
         } catch (e) {
-            console.warn("Could not close window (already closed?):", e.message);
+            // Ignore error if window was already closed.
         }
     } else {
         await createClockWindow();
@@ -66,33 +61,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.action === 'clear-alarm') {
         chrome.alarms.clear(request.alarmName);
         sendResponse({ status: "Alarm cleared" });
-    } else if (request.action === 'test-alarm') {
-        triggerAlarmEffects(request.alarmName).then(() => {
-            sendResponse({ status: "Test alarm triggered" });
-        });
-        return true; // Indicate that the response is asynchronous.
     }
-    // Return false for messages that are not handled here.
     return false;
 });
 
 
-chrome.alarms.onAlarm.addListener(async (alarm) => {
-    console.log(`Alarm "${alarm.name}" triggered.`);
-    triggerAlarmEffects(alarm.name);
-});
+chrome.alarms.onAlarm.addListener(triggerAlarmEffects);
 
-async function triggerAlarmEffects(alarmName) {
-    console.log(`Triggering effects for alarm: ${alarmName}`);
+async function triggerAlarmEffects(alarm) {
+    const alarmName = alarm.name;
+
     // 1. Bring clock window to front and show visual indicator
-    const existingWindow = await findClockWindow();
-    let windowToFocus = existingWindow;
+    let windowToFocus = await findClockWindow();
     if (!windowToFocus) {
         windowToFocus = await createClockWindow();
     }
     if (windowToFocus) {
         await chrome.windows.update(windowToFocus.id, { focused: true });
-        // Send message to the content script in the clock window
         const tabs = await chrome.tabs.query({ windowId: windowToFocus.id });
         const clockTab = tabs.find(tab => tab.url.includes("clock_window.html"));
         if (clockTab) {
@@ -100,24 +85,18 @@ async function triggerAlarmEffects(alarmName) {
         }
     }
 
-
     // 2. Play sound via offscreen document
     const alarmSettingsKey = alarmName === 'alarm-1' ? 'alarm1Settings' : 'alarm2Settings';
     const { [alarmSettingsKey]: settings } = await chrome.storage.local.get(alarmSettingsKey);
-    const { alarmSoundEnabled } = await chrome.storage.local.get({ alarmSoundEnabled: true });
 
-
-    if (settings && settings.enabled && alarmSoundEnabled) {
-        console.log(`Settings found for ${alarmName}. Playing sound: ${settings.sound}`);
+    if (settings && settings.enabled) {
         await playSoundOffscreen(settings.sound, settings.duration);
-    } else {
-        console.log(`Sound for ${alarmName} is disabled or settings not found.`);
     }
 }
 
 
 // --- Offscreen Document Audio Playback ---
-let creatingOffscreenDocument = null; // Promise to prevent race conditions
+let creatingOffscreenDocument = null;
 
 async function hasOffscreenDocument(path) {
   const offscreenUrl = chrome.runtime.getURL(path);
@@ -126,9 +105,7 @@ async function hasOffscreenDocument(path) {
 }
 
 async function playSoundOffscreen(sound, duration) {
-    console.log("playSoundOffscreen called.");
     if (await hasOffscreenDocument(OFFSCREEN_DOCUMENT_PATH)) {
-        console.log("Offscreen document exists. Sending play message.");
         chrome.runtime.sendMessage({
             target: 'offscreen',
             action: 'play-alarm-sound',
@@ -139,14 +116,11 @@ async function playSoundOffscreen(sound, duration) {
     }
 
     if (creatingOffscreenDocument) {
-        console.log("Offscreen document is already being created. Waiting...");
         await creatingOffscreenDocument;
     } else {
-        console.log("Creating new offscreen document.");
         creatingOffscreenDocument = new Promise((resolve, reject) => {
             const readyListener = (message) => {
                 if (message.action === 'offscreen-ready') {
-                    console.log("Offscreen document ready signal received.");
                     chrome.runtime.onMessage.removeListener(readyListener);
                     resolve();
                 }
@@ -156,11 +130,7 @@ async function playSoundOffscreen(sound, duration) {
                 url: OFFSCREEN_DOCUMENT_PATH,
                 reasons: ['AUDIO_PLAYBACK'],
                 justification: 'To play alarm sounds reliably in the background.',
-            }).catch(error => {
-                 console.error("Error creating offscreen document:", error);
-                 chrome.runtime.onMessage.removeListener(readyListener);
-                 reject(error);
-            });
+            }).catch(reject);
         });
 
         try {
@@ -170,7 +140,6 @@ async function playSoundOffscreen(sound, duration) {
         }
     }
 
-    console.log("Offscreen document is ready. Sending play message.");
     chrome.runtime.sendMessage({
         target: 'offscreen',
         action: 'play-alarm-sound',
