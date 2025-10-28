@@ -21,15 +21,18 @@ chrome.runtime.onMessage.addListener((message) => {
     audioPlayer.pause();
     console.log("Audio paused.");
 
-    // Set the new sound source and play it
+    // Set the new sound source
     const soundFile = `sounds/${message.sound}.mp3`;
     audioPlayer.src = chrome.runtime.getURL(soundFile);
     audioPlayer.loop = true;
-    console.log(`Attempting to play sound: ${audioPlayer.src}`);
 
-    audioPlayer.play()
-      .then(() => console.log("Audio playback started successfully."))
-      .catch(e => console.error("Audio play failed:", e));
+    // Wait for the audio to be ready before playing
+    audioPlayer.oncanplaythrough = () => {
+        console.log(`Audio ready. Attempting to play sound: ${audioPlayer.src}`);
+        audioPlayer.play()
+          .then(() => console.log("Audio playback started successfully."))
+          .catch(e => console.error("Audio play failed:", e));
+    };
 
     // Set a timer to stop the sound after the specified duration
     console.log(`Setting timer to stop sound in ${message.duration} seconds.`);
