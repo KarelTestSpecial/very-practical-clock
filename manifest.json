@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "icons": {
@@ -12,7 +12,9 @@
   "permissions": [
     "windows",
     "storage",
-    "system.display"
+    "system.display",
+    "alarms",
+    "offscreen"
   ],
   "background": {
     "service_worker": "background.js"

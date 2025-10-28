@@ -41,6 +41,9 @@
     "timePaddingLabel": {
         "message": "Padding Below Time"
     },
+    "timePaddingAboveLabel": {
+        "message": "Padding Above Time"
+    },
     "dateFontLabel": {
         "message": "Date Font"
     },
@@ -97,12 +100,6 @@
     },
     "restoreFavoritesText": {
         "message": "Restore Favorite"
-    },
-    "screensaverInstructionsTitle": {
-        "message": "Screensaver:"
-    },
-    "screensaverInstructionsText": {
-        "message": "Click on the time, date or the button in settings to start/stop the screensaver."
     },
     "notepadPlaceholder": {
         "message": "Your notes here..."
