@@ -155,8 +155,6 @@ function applyTranslations() {
     bewaarFavorietKnop.textContent = chrome.i18n.getMessage('saveFavoritesText');
     herstelStandaardKnop.textContent = chrome.i18n.getMessage('defaultSettingsText');
     herstelFavorietKnop.textContent = chrome.i18n.getMessage('restoreFavoritesText');
-    document.getElementById('screensaverInstructionsTitle').textContent = chrome.i18n.getMessage('screensaverInstructionsTitle');
-    document.getElementById('screensaverInstructionsText').textContent = chrome.i18n.getMessage('screensaverInstructionsText');
     if (notepadArea) notepadArea.placeholder = chrome.i18n.getMessage('notepadPlaceholder');
 
     // Vertalingen voor het nieuwe positie-keuzemenu
