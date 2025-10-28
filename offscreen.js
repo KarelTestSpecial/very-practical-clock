@@ -44,3 +44,6 @@ function playAlarmSound(sound, duration) {
     timeoutId = null;
   }, duration * 1000);
 }
+
+// Signal that the offscreen document is ready to receive messages.
+chrome.runtime.sendMessage({ action: 'offscreen-ready' });

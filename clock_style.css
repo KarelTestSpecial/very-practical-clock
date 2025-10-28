@@ -213,3 +213,28 @@ button:hover { background-color: #555; }
 
 input:checked + .slider { background-color: #39FF14; }
 input:checked + .slider:before { transform: translateX(18px); }
+
+/* --- Screensaver --- */
+@keyframes glide {
+    0% { transform: translate(var(--start-x), var(--start-y)); }
+    100% { transform: translate(var(--end-x), var(--end-y)); }
+}
+
+body.screensaver-active {
+    cursor: none;
+}
+
+.screensaver-active #klok-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 20px;
+    animation: glide 10s linear infinite alternate;
+    /* transition: transform 10s linear; */
+}
+
+.screensaver-active #knoppen-wrapper,
+.screensaver-active .instellingen-paneel,
+.screensaver-active #notepad-container {
+    display: none !important;
+}

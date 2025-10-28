@@ -12,7 +12,7 @@ let toggleDatumKnop, startScreensaverKnop, statusMessageElement, klokPositieSele
 // Globale status- en timer-variabelen
 let toonSeconden, toonBatterij;
 let isScreensaverActive = false;
-let screensaverIntervalId = null;
+let screensaverAnimationTimeout = null;
 let statusMessageTimeoutId = null;
 let windowResizeTimer = null;
 let currentAlarmAudio = null;
@@ -446,26 +446,60 @@ async function herstelFavorieteInstellingen() {
     }
 }
 
-function moveClockRandomly() {
+function updateScreensaverPosition() {
     if (!isScreensaverActive || !klokContainer) return;
+
     const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
     const { offsetWidth: clockWidth, offsetHeight: clockHeight } = klokContainer;
-    klokContainer.style.top = `${Math.floor(Math.random() * (windowHeight - clockHeight))}px`;
-    klokContainer.style.left = `${Math.floor(Math.random() * (windowWidth - clockWidth))}px`;
+
+    // Get the current position from the computed style
+    const style = window.getComputedStyle(klokContainer);
+    const matrix = new DOMMatrix(style.transform);
+    const currentX = matrix.m41;
+    const currentY = matrix.m42;
+
+    // Set the start of the animation to the current position
+    klokContainer.style.setProperty('--start-x', `${currentX}px`);
+    klokContainer.style.setProperty('--start-y', `${currentY}px`);
+
+    // Calculate a new random end position
+    const newX = Math.floor(Math.random() * (windowWidth - clockWidth));
+    const newY = Math.floor(Math.random() * (windowHeight - clockHeight));
+    klokContainer.style.setProperty('--end-x', `${newX}px`);
+    klokContainer.style.setProperty('--end-y', `${newY}px`);
+
+    // Reset the animation to apply the new values
+    klokContainer.style.animation = 'none';
+    // This is a trick to force a reflow, ensuring the browser picks up the new animation
+    void klokContainer.offsetWidth;
+    klokContainer.style.animation = ''; // Re-apply the animation from CSS
 }
 
+
 function startScreensaver() {
-    moveClockRandomly();
-    screensaverIntervalId = setInterval(moveClockRandomly, 7000);
+    // Set initial random position before starting the animation loop
+    const { innerWidth: windowWidth, innerHeight: windowHeight } = window;
+    const { offsetWidth: clockWidth, offsetHeight: clockHeight } = klokContainer;
+    const initialX = Math.floor(Math.random() * (windowWidth - clockWidth));
+    const initialY = Math.floor(Math.random() * (windowHeight - clockHeight));
+    klokContainer.style.setProperty('--start-x', `${initialX}px`);
+    klokContainer.style.setProperty('--start-y', `${initialY}px`);
+    klokContainer.style.transform = `translate(${initialX}px, ${initialY}px)`;
+
+
+    updateScreensaverPosition(); // Set the first animation target
+    // Set an interval to update the destination every 10 seconds (matching the animation duration)
+    screensaverAnimationTimeout = setInterval(updateScreensaverPosition, 10000);
 }
 
 function stopScreensaver() {
-    if (screensaverIntervalId) clearInterval(screensaverIntervalId);
-    screensaverIntervalId = null;
+    if (screensaverAnimationTimeout) clearInterval(screensaverAnimationTimeout);
+    screensaverAnimationTimeout = null;
     if (klokContainer) {
-        klokContainer.style.top = '';
-        klokContainer.style.left = '';
+        klokContainer.style.transform = '';
+        klokContainer.style.animation = '';
     }
+    // Restore the layout defined by user settings
     chrome.storage.local.get('klokPositie', ({ klokPositie = standaardInstellingen.klokPositie }) => setKlokLayout(klokPositie));
 }
 
@@ -474,9 +508,14 @@ async function toggleScreensaver(event) {
     isScreensaverActive = !isScreensaverActive;
     const currentWindow = await chrome.windows.getCurrent();
     document.body.classList.toggle('screensaver-active', isScreensaverActive);
+
     if (isScreensaverActive) {
         document.addEventListener('click', handleScreensaverBackgroundClick, true);
-        try { await chrome.windows.update(currentWindow.id, { state: "fullscreen" }); } catch (e) { console.error("Could not set to fullscreen:", e); }
+         try {
+             if ((await chrome.windows.get(currentWindow.id)).state !== "fullscreen") {
+                await chrome.windows.update(currentWindow.id, { state: "fullscreen" });
+             }
+         } catch (e) { console.error("Could not set to fullscreen:", e); }
         startScreensaver();
     } else {
         document.removeEventListener('click', handleScreensaverBackgroundClick, true);
