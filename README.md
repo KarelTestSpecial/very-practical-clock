@@ -1,6 +1,6 @@
 # Very Practical Clock
 
-A simple, clean, and highly customizable clock that opens in a new minimal window. Designed to be practical and easy on the eyes, it provides just the information you need with a host of personalization options.
+A simple, clean, and highly customizable clock that opens in a new minimal window. Designed to be practical and easy on the eyes, it provides the information you need with a host of personalization options.
 
 ## Usage
 
