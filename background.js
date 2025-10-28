@@ -63,18 +63,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'set-alarm') {
         chrome.alarms.create(request.alarmName, { when: request.when });
         sendResponse({ status: "Alarm set" });
-        return false; // No async response needed
     } else if (request.action === 'clear-alarm') {
         chrome.alarms.clear(request.alarmName);
         sendResponse({ status: "Alarm cleared" });
-        return false; // No async response needed
     } else if (request.action === 'test-alarm') {
         triggerAlarmEffects(request.alarmName).then(() => {
             sendResponse({ status: "Test alarm triggered" });
         });
-        return true; // Async response will be sent
+        return true; // Indicate that the response is asynchronous.
     }
-    // Let other listeners handle messages like 'offscreen-ready'
+    // Return false for messages that are not handled here.
     return false;
 });
 
