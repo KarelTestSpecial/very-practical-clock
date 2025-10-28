@@ -12,8 +12,14 @@ function handleMessages(message) {
 }
 
 let currentAudio = null;
+let timeoutId = null;
 
 function playAlarmSound(sound, duration) {
+  // Clear any existing timeout and pause current audio
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    timeoutId = null;
+  }
   if (currentAudio) {
     currentAudio.pause();
     currentAudio = null;
@@ -24,13 +30,17 @@ function playAlarmSound(sound, duration) {
   currentAudio.loop = true;
 
   currentAudio.play().catch(error => {
-    console.error("Error playing sound in offscreen document:", error);
+    // We can ignore the AbortError because we are intentionally interrupting the previous sound.
+    if (error.name !== 'AbortError') {
+      console.error("Error playing sound in offscreen document:", error);
+    }
   });
 
-  setTimeout(() => {
+  timeoutId = setTimeout(() => {
     if (currentAudio) {
       currentAudio.pause();
       currentAudio = null;
     }
+    timeoutId = null;
   }, duration * 1000);
 }
