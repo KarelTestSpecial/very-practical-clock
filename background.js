@@ -145,28 +145,24 @@ async function playSoundOffscreen(sound, duration) {
         await creatingOffscreenDocument;
     } else {
         console.log("Creating new offscreen document.");
-        creatingOffscreenDocument = new Promise(async (resolve, reject) => {
-            const readyListener = (message, sender, sendResponse) => {
+        creatingOffscreenDocument = new Promise((resolve, reject) => {
+            const readyListener = (message) => {
                 if (message.action === 'offscreen-ready') {
                     console.log("Offscreen document ready signal received.");
                     chrome.runtime.onMessage.removeListener(readyListener);
                     resolve();
                 }
-                return true; // Keep listener active
             };
             chrome.runtime.onMessage.addListener(readyListener);
-
-            try {
-                await chrome.offscreen.createDocument({
-                    url: OFFSCREEN_DOCUMENT_PATH,
-                    reasons: ['AUDIO_PLAYBACK'],
-                    justification: 'To play alarm sounds reliably in the background.',
-                });
-            } catch (error) {
+            chrome.offscreen.createDocument({
+                url: OFFSCREEN_DOCUMENT_PATH,
+                reasons: ['AUDIO_PLAYBACK'],
+                justification: 'To play alarm sounds reliably in the background.',
+            }).catch(error => {
                  console.error("Error creating offscreen document:", error);
                  chrome.runtime.onMessage.removeListener(readyListener);
                  reject(error);
-            }
+            });
         });
 
         try {

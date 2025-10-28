@@ -279,10 +279,16 @@ async function laadInstellingen() {
 
 async function saveAlarmSetting(alarmNum, key, value) {
     const alarmSettingsKey = `alarm${alarmNum}Settings`;
-    const data = await chrome.storage.local.get(alarmSettingsKey);
-    const settings = data[alarmSettingsKey] || standaardInstellingen[alarmSettingsKey];
 
-    const newSettings = { ...settings, [key]: value };
+    // Get existing settings from storage.
+    const data = await chrome.storage.local.get(alarmSettingsKey);
+    const existingSettings = data[alarmSettingsKey] || {};
+
+    // Merge with defaults to ensure all keys are present.
+    const completeSettings = { ...standaardInstellingen[alarmSettingsKey], ...existingSettings };
+
+    // Apply the new value.
+    const newSettings = { ...completeSettings, [key]: value };
     await chrome.storage.local.set({ [alarmSettingsKey]: newSettings });
 
     const alarmName = `alarm-${alarmNum}`;
