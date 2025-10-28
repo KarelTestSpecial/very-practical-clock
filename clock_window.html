@@ -17,21 +17,13 @@
         </div>
 
         <div id="knoppen-wrapper">
-            <!-- Alleen de instellingenknop blijft over -->
             <button id="toon-instellingen"></button>
         </div>
 
         <div class="instellingen-paneel hidden">
             <h3 id="settingsTitleText"></h3>
 
-            <div class="instellingen-acties-groep">
-                <button id="toggle-seconden"></button>
-                <button id="toggle-notepad"></button>
-                <button id="toggle-datum"></button>
-                <button id="toggle-dag-naam"></button>
-                <button id="toggle-batterij"></button>
-            </div>
-
+            <!-- Eerste rij: Time, Date, Alarm 1, Alarm 2 -->
             <div class="instellingen-rij">
                 <div class="instelling-groep">
                     <h4 id="timeLabel">Time</h4>
@@ -39,16 +31,9 @@
                     <select id="font-tijd">
                         <option value="Arial, sans-serif">Arial</option>
                         <option value="Verdana, sans-serif">Verdana</option>
-                        <option value="Helvetica, sans-serif">Helvetica</option>
-                        <option value="Tahoma, sans-serif">Tahoma</option>
-                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-                        <option value="'Times New Roman', serif">Times New Roman</option>
-                        <option value="Georgia, serif">Georgia</option>
                         <option value="'Courier New', monospace">Courier New</option>
-                        <option value="'Lucida Console', monospace">Lucida Console</option>
-                        <option value="monospace">Default Monospace</option>
-                        <option value="sans-serif">Default Sans-serif</option>
-                        <option value="serif">Default Serif</option>
+                        <option value="monospace">Monospace</option>
+                        <option value="sans-serif">Sans-serif</option>
                     </select>
                     <label for="grootte-tijd"><span id="lblGrootteTijdText"></span> <span id="weergave-grootte-tijd"></span></label>
                     <input type="range" id="grootte-tijd" min="1.0" max="7.0" step="0.1">
@@ -63,16 +48,9 @@
                     <select id="font-datum">
                         <option value="Arial, sans-serif">Arial</option>
                         <option value="Verdana, sans-serif">Verdana</option>
-                        <option value="Helvetica, sans-serif">Helvetica</option>
-                        <option value="Tahoma, sans-serif">Tahoma</option>
-                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-                        <option value="'Times New Roman', serif">Times New Roman</option>
-                        <option value="Georgia, serif">Georgia</option>
                         <option value="'Courier New', monospace">Courier New</option>
-                        <option value="'Lucida Console', monospace">Lucida Console</option>
-                        <option value="monospace">Default Monospace</option>
-                        <option value="sans-serif">Default Sans-serif</option>
-                        <option value="serif">Default Serif</option>
+                        <option value="monospace">Monospace</option>
+                        <option value="sans-serif">Sans-serif</option>
                     </select>
                     <label for="grootte-datum"><span id="lblGrootteDatumText"></span> <span id="weergave-grootte-datum"></span></label>
                     <input type="range" id="grootte-datum" min="1.0" max="3.0" step="0.1">
@@ -81,59 +59,6 @@
                     <label for="padding-onder-datum"><span id="lblPaddingOnderDatumText"></span> <span id="weergave-padding-onder-datum"></span></label>
                     <input type="range" id="padding-onder-datum" min="0" max="50" step="1">
                 </div>
-            </div>
-
-            <div class="instellingen-rij">
-                <div class="instelling-groep">
-                    <h4 id="batteryLabel">Battery</h4>
-                    <label for="font-batterij" id="lblFontBatterij"></label>
-                    <select id="font-batterij">
-                        <option value="Arial, sans-serif">Arial</option>
-                        <option value="Verdana, sans-serif">Verdana</option>
-                        <option value="'Arial Black', sans-serif">Arial Black</option>
-                        <option value="Impact, sans-serif">Impact</option>
-                        <option value="'Courier New', monospace">Courier New</option>
-                        <option value="monospace">Default Monospace</option>
-                        <option value="sans-serif">Default Sans-serif</option>
-                    </select>
-                    <label for="grootte-batterij"><span id="lblGrootteBatterijText"></span> <span id="weergave-grootte-batterij"></span></label>
-                    <input type="range" id="grootte-batterij" min="1.0" max="3.0" step="0.1">
-                    <label for="kleur-batterij" id="lblKleurBatterij"></label>
-                    <input type="color" id="kleur-batterij">
-                    <label for="breedte-batterij"><span id="lblBreedteBatterijText"></span> <span id="weergave-breedte-batterij"></span></label>
-                    <input type="range" id="breedte-batterij" min="0.5" max="2.5" step="0.05">
-                    <label for="padding-onder-batterij"><span id="lblPaddingOnderBatterijText"></span> <span id="weergave-padding-onder-batterij"></span></label>
-                    <input type="range" id="padding-onder-batterij" min="0" max="50" step="1">
-                </div>
-                <div class="instelling-groep">
-                    <h4 id="notepadLabel">Notepad</h4>
-                    <label for="font-notepad" id="lblFontNotepad"></label>
-                    <select id="font-notepad">
-                        <option value="Arial, sans-serif">Arial</option>
-                        <option value="Verdana, sans-serif">Verdana</option>
-                        <option value="Helvetica, sans-serif">Helvetica</option>
-                        <option value="Tahoma, sans-serif">Tahoma</option>
-                        <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-                        <option value="'Times New Roman', serif">Times New Roman</option>
-                        <option value="Georgia, serif">Georgia</option>
-                        <option value="'Courier New', monospace">Courier New</option>
-                        <option value="'Lucida Console', monospace">Lucida Console</option>
-                        <option value="monospace">Default Monospace</option>
-                        <option value="sans-serif">Default Sans-serif</option>
-                        <option value="serif">Default Serif</option>
-                    </select>
-                    <label for="grootte-notepad"><span id="lblGrootteNotepadText"></span> <span id="weergave-grootte-notepad"></span></label>
-                    <input type="range" id="grootte-notepad" min="1.0" max="3.0" step="0.1">
-                    <label for="notepad-text-align" id="lblNotepadTextAlign"></label>
-                    <select id="notepad-text-align">
-                        <option value="left" id="optTextAlignLeft"></option>
-                        <option value="center" id="optTextAlignCenter"></option>
-                        <option value="right" id="optTextAlignRight"></option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="instellingen-rij">
                 <div class="instelling-groep">
                     <h4>Alarm 1</h4>
                     <input type="time" id="alarm-tijd-1">
@@ -158,27 +83,72 @@
                 </div>
             </div>
 
-            <div>
-                <label for="klok-positie-select" id="lblKlokPositie"></label>
-                <select id="klok-positie-select">
-                    <option value="top-left" id="optPosTopLeft"></option>
-                    <option value="top-center" id="optPosTopCenter"></option>
-                    <option value="top-right" id="optPosTopRight"></option>
-                    <option value="center-center" id="optPosCenterCenter"></option>
-                    <option value="bottom-left" id="optPosBottomLeft"></option>
-                    <option value="bottom-center" id="optPosBottomCenter"></option>
-                    <option value="bottom-right" id="optPosBottomRight"></option>
-                </select>
-                <label for="achtergrond-kleur" id="lblAchtergrondKleur"></label>
-                <input type="color" id="achtergrond-kleur">
+            <!-- Tweede rij: Battery, Notepad/General, Buttons -->
+            <div class="instellingen-rij">
+                <div class="instelling-groep">
+                    <h4 id="batteryLabel">Battery</h4>
+                    <label for="font-batterij" id="lblFontBatterij"></label>
+                    <select id="font-batterij">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                    </select>
+                    <label for="grootte-batterij"><span id="lblGrootteBatterijText"></span> <span id="weergave-grootte-batterij"></span></label>
+                    <input type="range" id="grootte-batterij" min="1.0" max="3.0" step="0.1">
+                    <label for="kleur-batterij" id="lblKleurBatterij"></label>
+                    <input type="color" id="kleur-batterij">
+                    <label for="breedte-batterij"><span id="lblBreedteBatterijText"></span> <span id="weergave-breedte-batterij"></span></label>
+                    <input type="range" id="breedte-batterij" min="0.5" max="2.5" step="0.05">
+                    <label for="padding-onder-batterij"><span id="lblPaddingOnderBatterijText"></span> <span id="weergave-padding-onder-batterij"></span></label>
+                    <input type="range" id="padding-onder-batterij" min="0" max="50" step="1">
+                </div>
+                <div class="instelling-groep">
+                    <h4 id="notepadLabel">Notepad & General</h4>
+                    <label for="font-notepad" id="lblFontNotepad"></label>
+                    <select id="font-notepad">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                    </select>
+                    <label for="grootte-notepad"><span id="lblGrootteNotepadText"></span> <span id="weergave-grootte-notepad"></span></label>
+                    <input type="range" id="grootte-notepad" min="1.0" max="3.0" step="0.1">
+                    <label for="notepad-text-align" id="lblNotepadTextAlign"></label>
+                    <select id="notepad-text-align">
+                        <option value="left" id="optTextAlignLeft"></option>
+                        <option value="center" id="optTextAlignCenter"></option>
+                        <option value="right" id="optTextAlignRight"></option>
+                    </select>
+                    <label for="klok-positie-select" id="lblKlokPositie"></label>
+                    <select id="klok-positie-select">
+                        <option value="top-left" id="optPosTopLeft"></option>
+                        <option value="top-center" id="optPosTopCenter"></option>
+                        <option value="top-right" id="optPosTopRight"></option>
+                        <option value="center-center" id="optPosCenterCenter"></option>
+                        <option value="bottom-left" id="optPosBottomLeft"></option>
+                        <option value="bottom-center" id="optPosBottomCenter"></option>
+                        <option value="bottom-right" id="optPosBottomRight"></option>
+                    </select>
+                    <label for="achtergrond-kleur" id="lblAchtergrondKleur"></label>
+                    <input type="color" id="achtergrond-kleur">
+                </div>
+                <div class="instelling-groep knoppen-container">
+                    <!-- Toggle Knoppen -->
+                    <div class="toggle-knoppen-grid">
+                        <button id="toggle-seconden"></button>
+                        <button id="toggle-notepad"></button>
+                        <button id="toggle-datum"></button>
+                        <button id="toggle-dag-naam"></button>
+                        <button id="toggle-batterij"></button>
+                    </div>
+                    <!-- Actie Knoppen -->
+                    <div class="actie-knoppen-rij">
+                        <button id="bewaar-favoriet"></button>
+                        <button id="herstel-standaard"></button>
+                        <button id="herstel-favoriet"></button>
+                        <button id="start-screensaver"></button>
+                    </div>
+                </div>
             </div>
-
-            <div class="instellingen-knoppen-groep">
-                <button id="bewaar-favoriet"></button>
-                <button id="herstel-standaard"></button>
-                <button id="herstel-favoriet"></button>
-            </div>
-             <button id="start-screensaver" class="screensaver-knop-in-paneel"></button>
         </div>
     </div>
     <div id="status-message"></div>
