@@ -60,18 +60,22 @@ chrome.action.onClicked.addListener(async () => {
 
 // --- Alarm Functionality ---
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'set-alarm') {
-    chrome.alarms.create(request.alarmName, { when: request.when });
-    sendResponse({ status: "Alarm set" });
-  } else if (request.action === 'clear-alarm') {
-    chrome.alarms.clear(request.alarmName);
-    sendResponse({ status: "Alarm cleared" });
-  } else if (request.action === 'test-alarm') {
-      triggerAlarmEffects(request.alarmName);
-      sendResponse({ status: "Test alarm triggered" });
-  }
-  // Note: 'offscreen-ready' is handled in playSoundOffscreen, not here.
-  return true; // Keep message channel open for async response
+    if (request.action === 'set-alarm') {
+        chrome.alarms.create(request.alarmName, { when: request.when });
+        sendResponse({ status: "Alarm set" });
+        return false; // No async response needed
+    } else if (request.action === 'clear-alarm') {
+        chrome.alarms.clear(request.alarmName);
+        sendResponse({ status: "Alarm cleared" });
+        return false; // No async response needed
+    } else if (request.action === 'test-alarm') {
+        triggerAlarmEffects(request.alarmName).then(() => {
+            sendResponse({ status: "Test alarm triggered" });
+        });
+        return true; // Async response will be sent
+    }
+    // Let other listeners handle messages like 'offscreen-ready'
+    return false;
 });
 
 
@@ -142,12 +146,13 @@ async function playSoundOffscreen(sound, duration) {
     } else {
         console.log("Creating new offscreen document.");
         creatingOffscreenDocument = new Promise(async (resolve, reject) => {
-            const readyListener = (message) => {
+            const readyListener = (message, sender, sendResponse) => {
                 if (message.action === 'offscreen-ready') {
                     console.log("Offscreen document ready signal received.");
                     chrome.runtime.onMessage.removeListener(readyListener);
                     resolve();
                 }
+                return true; // Keep listener active
             };
             chrome.runtime.onMessage.addListener(readyListener);
 
