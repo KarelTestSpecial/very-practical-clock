@@ -76,10 +76,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
+    console.log(`Alarm "${alarm.name}" triggered.`);
     triggerAlarmEffects(alarm.name);
 });
 
 async function triggerAlarmEffects(alarmName) {
+    console.log(`Triggering effects for alarm: ${alarmName}`);
     // 1. Bring clock window to front and show visual indicator
     const existingWindow = await findClockWindow();
     let windowToFocus = existingWindow;
@@ -104,7 +106,10 @@ async function triggerAlarmEffects(alarmName) {
 
 
     if (settings && settings.enabled && alarmSoundEnabled) {
+        console.log(`Settings found for ${alarmName}. Playing sound: ${settings.sound}`);
         await playSoundOffscreen(settings.sound, settings.duration);
+    } else {
+        console.log(`Sound for ${alarmName} is disabled or settings not found.`);
     }
 }
 
@@ -119,7 +124,9 @@ async function hasOffscreenDocument(path) {
 }
 
 async function playSoundOffscreen(sound, duration) {
+    console.log("playSoundOffscreen called.");
     if (await hasOffscreenDocument(OFFSCREEN_DOCUMENT_PATH)) {
+        console.log("Offscreen document exists. Sending play message.");
         chrome.runtime.sendMessage({
             target: 'offscreen',
             action: 'play-alarm-sound',
@@ -130,11 +137,14 @@ async function playSoundOffscreen(sound, duration) {
     }
 
     if (creatingOffscreenDocument) {
+        console.log("Offscreen document is already being created. Waiting...");
         await creatingOffscreenDocument;
     } else {
+        console.log("Creating new offscreen document.");
         creatingOffscreenDocument = new Promise(async (resolve, reject) => {
             const readyListener = (message) => {
                 if (message.action === 'offscreen-ready') {
+                    console.log("Offscreen document ready signal received.");
                     chrome.runtime.onMessage.removeListener(readyListener);
                     resolve();
                 }
@@ -148,6 +158,7 @@ async function playSoundOffscreen(sound, duration) {
                     justification: 'To play alarm sounds reliably in the background.',
                 });
             } catch (error) {
+                 console.error("Error creating offscreen document:", error);
                  chrome.runtime.onMessage.removeListener(readyListener);
                  reject(error);
             }
@@ -160,7 +171,7 @@ async function playSoundOffscreen(sound, duration) {
         }
     }
 
-    // Now that the document is ready, send the message
+    console.log("Offscreen document is ready. Sending play message.");
     chrome.runtime.sendMessage({
         target: 'offscreen',
         action: 'play-alarm-sound',

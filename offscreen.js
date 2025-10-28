@@ -1,49 +1,48 @@
+console.log("Offscreen script loaded.");
 
-chrome.runtime.onMessage.addListener(handleMessages);
+const audioPlayer = document.getElementById('alarm-audio-player');
+let stopTimer = null;
 
-function handleMessages(message) {
-  if (message.target !== 'offscreen') {
-    return;
-  }
+if (!audioPlayer) {
+    console.error("Audio player element not found in offscreen document.");
+}
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message.target !== 'offscreen') return;
+
+  console.log("Offscreen document received message:", message);
 
   if (message.action === 'play-alarm-sound') {
-    playAlarmSound(message.sound, message.duration);
-  }
-}
-
-let currentAudio = null;
-let timeoutId = null;
-
-function playAlarmSound(sound, duration) {
-  // Clear any existing timeout and pause current audio
-  if (timeoutId) {
-    clearTimeout(timeoutId);
-    timeoutId = null;
-  }
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio = null;
-  }
-
-  const soundFile = `sounds/${sound}.mp3`;
-  currentAudio = new Audio(chrome.runtime.getURL(soundFile));
-  currentAudio.loop = true;
-
-  currentAudio.play().catch(error => {
-    // We can ignore the AbortError because we are intentionally interrupting the previous sound.
-    if (error.name !== 'AbortError') {
-      console.error("Error playing sound in offscreen document:", error);
+    // Stop any currently playing sound and clear any existing timer
+    if (stopTimer) {
+      console.log("Clearing previous stop timer.");
+      clearTimeout(stopTimer);
     }
-  });
+    audioPlayer.pause();
+    console.log("Audio paused.");
 
-  timeoutId = setTimeout(() => {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
-    }
-    timeoutId = null;
-  }, duration * 1000);
-}
+    // Set the new sound source and play it
+    const soundFile = `sounds/${message.sound}.mp3`;
+    audioPlayer.src = chrome.runtime.getURL(soundFile);
+    audioPlayer.loop = true;
+    console.log(`Attempting to play sound: ${audioPlayer.src}`);
+
+    audioPlayer.play()
+      .then(() => console.log("Audio playback started successfully."))
+      .catch(e => console.error("Audio play failed:", e));
+
+    // Set a timer to stop the sound after the specified duration
+    console.log(`Setting timer to stop sound in ${message.duration} seconds.`);
+    stopTimer = setTimeout(() => {
+      console.log("Stop timer elapsed. Pausing audio.");
+      audioPlayer.pause();
+      audioPlayer.src = ''; // Clear the source
+      stopTimer = null;
+    }, message.duration * 1000);
+  }
+  return true;
+});
 
 // Signal that the offscreen document is ready to receive messages.
+console.log("Sending 'offscreen-ready' message to service worker.");
 chrome.runtime.sendMessage({ action: 'offscreen-ready' });
