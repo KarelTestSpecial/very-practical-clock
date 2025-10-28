@@ -603,33 +603,5 @@ async function initializeClock() {
     setInterval(updateKlok, 1000);
 }
 
-async function playAlarmSound(alarmName) {
-    if (currentAlarmAudio) {
-        currentAlarmAudio.pause();
-        currentAlarmAudio = null;
-    }
-    const alarmSettingsKey = alarmName === 'alarm-1' ? 'alarm1Settings' : 'alarm2Settings';
-    const { [alarmSettingsKey]: settings } = await chrome.storage.local.get(alarmSettingsKey);
-    if (settings && settings.enabled) {
-        const soundFile = `sounds/${settings.sound}.mp3`;
-        currentAlarmAudio = new Audio(chrome.runtime.getURL(soundFile));
-        currentAlarmAudio.loop = true;
-        currentAlarmAudio.play().catch(e => console.error("Error playing sound:", e));
-        setTimeout(() => {
-            if (currentAlarmAudio) {
-                currentAlarmAudio.pause();
-                currentAlarmAudio = null;
-            }
-        }, settings.duration * 1000);
-    }
-}
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'play-alarm-sound') {
-        playAlarmSound(request.alarmName);
-        sendResponse({status: "playing"});
-    }
-    return true; // Indicates an async response
-});
 
 document.addEventListener('DOMContentLoaded', initializeClock);

@@ -13,7 +13,8 @@
     "windows",
     "storage",
     "system.display",
-    "alarms"
+    "alarms",
+    "offscreen"
   ],
   "background": {
     "service_worker": "background.js"

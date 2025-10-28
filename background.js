@@ -1,25 +1,23 @@
 let klokWindowId = null;
+const OFFSCREEN_DOCUMENT_PATH = '/offscreen.html';
 
-// Functie om het klokvenster te maken, herbruikbaar voor de alarmen
+// --- Window Management ---
 async function createClockWindow() {
-  const defaultWidth = 320; // Iets breder voor de nieuwe layout
+  const defaultWidth = 320;
   const defaultHeight = 220;
-  const { windowWidth, windowHeight } = await chrome.storage.local.get({
-    windowWidth: defaultWidth,
-    windowHeight: defaultHeight
-  });
+  const { windowWidth, windowHeight } = await chrome.storage.local.get({ windowWidth: defaultWidth, windowHeight: defaultHeight });
 
   const screenInfo = await chrome.system.display.getInfo();
   const primaryDisplay = screenInfo.find(display => display.isPrimary) || screenInfo[0];
   if (!primaryDisplay) {
-    console.error("Geen display informatie gevonden.");
-    return;
+    console.error("No display information found.");
+    return null;
   }
   const screenWidth = primaryDisplay.bounds.width;
   const screenHeight = primaryDisplay.bounds.height;
 
-  return new Promise((resolve) => {
-    chrome.windows.create({
+  try {
+    const window = await chrome.windows.create({
       url: chrome.runtime.getURL("clock_window.html"),
       type: "popup",
       width: windowWidth,
@@ -27,31 +25,24 @@ async function createClockWindow() {
       left: Math.max(0, screenWidth - windowWidth - 20),
       top: Math.max(0, screenHeight - windowHeight - 20),
       focused: true,
-    }, (window) => {
-      if (chrome.runtime.lastError) {
-        console.error("Fout bij het maken van het venster:", chrome.runtime.lastError.message);
-        klokWindowId = null;
-        resolve(null);
-      } else if (window) {
-        klokWindowId = window.id;
-        resolve(window);
-      } else {
-        klokWindowId = null;
-        resolve(null);
-      }
     });
-  });
+    klokWindowId = window.id;
+    return window;
+  } catch (error) {
+    console.error("Error creating window:", error.message);
+    klokWindowId = null;
+    return null;
+  }
 }
 
-chrome.action.onClicked.addListener(async (tab) => {
+chrome.action.onClicked.addListener(async () => {
   if (klokWindowId !== null) {
     try {
       await chrome.windows.remove(klokWindowId);
-      // De onRemoved listener zal klokWindowId resetten.
     } catch (e) {
-      console.warn("Kon venster niet sluiten (mogelijk al gesloten):", e.message);
-      klokWindowId = null; // Reset voor de zekerheid
-      await createClockWindow(); // Maak een nieuw venster
+      console.warn("Could not close window (already closed?):", e.message);
+      klokWindowId = null;
+      await createClockWindow();
     }
   } else {
     await createClockWindow();
@@ -64,42 +55,62 @@ chrome.windows.onRemoved.addListener((windowId) => {
   }
 });
 
-// --- Alarm Functionaliteit ---
 
-// Luister naar berichten van de clock_script om alarmen in te stellen of te verwijderen
+// --- Alarm Functionality ---
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'set-alarm') {
-    // periodInMinutes is niet nodig voor dagelijkse alarmen, 'when' is genoeg.
-    // Voor een dagelijks alarm, moet het script in de clock window het alarm opnieuw instellen voor de volgende dag.
     chrome.alarms.create(request.alarmName, { when: request.when });
+    sendResponse({ status: "Alarm set" });
   } else if (request.action === 'clear-alarm') {
     chrome.alarms.clear(request.alarmName);
+    sendResponse({ status: "Alarm cleared" });
   }
+  return true;
 });
 
-// Luister naar wanneer een alarm afgaat
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  let window;
+  // 1. Bring clock window to front
   if (klokWindowId !== null) {
     try {
-      window = await chrome.windows.get(klokWindowId, { populate: true });
       await chrome.windows.update(klokWindowId, { focused: true });
     } catch (e) {
-      // Venster was waarschijnlijk gesloten, maak een nieuwe
-      window = await createClockWindow();
+      await createClockWindow();
     }
   } else {
-    window = await createClockWindow();
+    await createClockWindow();
   }
 
-  // Stuur een bericht naar het venster om het geluid af te spelen
-  if (window && window.tabs && window.tabs.length > 0) {
-    // Wacht even om zeker te zijn dat de content script geladen is, vooral bij een nieuw venster
-    setTimeout(() => {
-        chrome.tabs.sendMessage(window.tabs[0].id, {
-            action: 'play-alarm-sound',
-            alarmName: alarm.name
-        });
-    }, 500);
+  // 2. Play sound via offscreen document
+  const alarmSettingsKey = alarm.name === 'alarm-1' ? 'alarm1Settings' : 'alarm2Settings';
+  const { [alarmSettingsKey]: settings } = await chrome.storage.local.get(alarmSettingsKey);
+
+  if (settings && settings.enabled) {
+    await playSoundOffscreen(settings.sound, settings.duration);
   }
 });
+
+
+// --- Offscreen Document Audio Playback ---
+async function hasOffscreenDocument(path) {
+  const offscreenUrl = chrome.runtime.getURL(path);
+  const matchedClients = await clients.matchAll();
+  return matchedClients.some(c => c.url === offscreenUrl);
+}
+
+async function playSoundOffscreen(sound, duration) {
+  const offscreenDocumentExists = await hasOffscreenDocument(OFFSCREEN_DOCUMENT_PATH);
+  if (!offscreenDocumentExists) {
+    await chrome.offscreen.createDocument({
+      url: OFFSCREEN_DOCUMENT_PATH,
+      reasons: ['AUDIO_PLAYBACK'],
+      justification: 'To play alarm sounds reliably in the background.',
+    });
+  }
+
+  chrome.runtime.sendMessage({
+    target: 'offscreen',
+    action: 'play-alarm-sound',
+    sound: sound,
+    duration: duration
+  });
+}
