@@ -238,3 +238,8 @@ body.screensaver-active {
 .screensaver-active #notepad-container {
     display: none !important;
 }
+
+body.alarm-active {
+    background-color: red !important;
+    transition: background-color 0.2s ease-in-out;
+}

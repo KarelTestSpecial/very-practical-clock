@@ -66,6 +66,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   } else if (request.action === 'clear-alarm') {
     chrome.alarms.clear(request.alarmName);
     sendResponse({ status: "Alarm cleared" });
+  } else if (request.action === 'test-alarm') {
+      triggerAlarmEffects(request.alarmName);
+      sendResponse({ status: "Test alarm triggered" });
   }
   // Note: 'offscreen-ready' is handled in playSoundOffscreen, not here.
   return true; // Keep message channel open for async response
@@ -73,22 +76,37 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
 chrome.alarms.onAlarm.addListener(async (alarm) => {
-  // 1. Bring clock window to front
-  const existingWindow = await findClockWindow();
-  if (existingWindow) {
-    await chrome.windows.update(existingWindow.id, { focused: true });
-  } else {
-    await createClockWindow();
-  }
-
-  // 2. Play sound via offscreen document
-  const alarmSettingsKey = alarm.name === 'alarm-1' ? 'alarm1Settings' : 'alarm2Settings';
-  const { [alarmSettingsKey]: settings } = await chrome.storage.local.get(alarmSettingsKey);
-
-  if (settings && settings.enabled) {
-    await playSoundOffscreen(settings.sound, settings.duration);
-  }
+    triggerAlarmEffects(alarm.name);
 });
+
+async function triggerAlarmEffects(alarmName) {
+    // 1. Bring clock window to front and show visual indicator
+    const existingWindow = await findClockWindow();
+    let windowToFocus = existingWindow;
+    if (!windowToFocus) {
+        windowToFocus = await createClockWindow();
+    }
+    if (windowToFocus) {
+        await chrome.windows.update(windowToFocus.id, { focused: true });
+        // Send message to the content script in the clock window
+        const tabs = await chrome.tabs.query({ windowId: windowToFocus.id });
+        const clockTab = tabs.find(tab => tab.url.includes("clock_window.html"));
+        if (clockTab) {
+             chrome.tabs.sendMessage(clockTab.id, { action: 'alarm-triggered' });
+        }
+    }
+
+
+    // 2. Play sound via offscreen document
+    const alarmSettingsKey = alarmName === 'alarm-1' ? 'alarm1Settings' : 'alarm2Settings';
+    const { [alarmSettingsKey]: settings } = await chrome.storage.local.get(alarmSettingsKey);
+    const { alarmSoundEnabled } = await chrome.storage.local.get({ alarmSoundEnabled: true });
+
+
+    if (settings && settings.enabled && alarmSoundEnabled) {
+        await playSoundOffscreen(settings.sound, settings.duration);
+    }
+}
 
 
 // --- Offscreen Document Audio Playback ---
