@@ -41,6 +41,9 @@
     "timePaddingLabel": {
         "message": "Padding Below Time"
     },
+    "timePaddingAboveLabel": {
+        "message": "Padding Above Time"
+    },
     "dateFontLabel": {
         "message": "Date Font"
     },
