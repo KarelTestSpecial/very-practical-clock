@@ -24,10 +24,8 @@
         <div class="instellingen-paneel hidden">
             <h3 id="settingsTitleText"></h3>
 
-            <!-- Eerste rij: Time, Battery, Notepad -->
-            <div class="instellingen-rij">
-                <div class="instelling-groep">
-                    <h4 id="timeLabel">Time</h4>
+            <div class="instelling-groep">
+                <h4 id="timeLabel">Time</h4>
                     <label for="font-tijd" id="lblFontTijd"></label>
                     <select id="font-tijd">
                         <option value="Arial, sans-serif">Arial</option>
@@ -89,10 +87,6 @@
                     <label for="achtergrond-kleur" id="lblAchtergrondKleur"></label>
                     <input type="color" id="achtergrond-kleur">
                 </div>
-            </div>
-
-            <!-- Tweede rij: Date, Alarms, Buttons -->
-            <div class="instellingen-rij">
                 <div class="instelling-groep">
                     <h4 id="dateLabel">Date</h4>
                     <label for="font-datum" id="lblFontDatum"></label>
@@ -108,6 +102,7 @@
                     <label for="padding-onder-datum"><span id="lblPaddingOnderDatumText"></span> <span id="weergave-padding-onder-datum"></span></label>
                     <input type="range" id="padding-onder-datum" min="0" max="50" step="1">
                 </div>
+
                 <div class="instelling-groep">
                     <h4>Alarm 1</h4>
                     <input type="time" id="alarm-tijd-1">
@@ -140,7 +135,6 @@
                     <button id="toggle-batterij"></button>
                     <button id="toggle-notepad"></button>
                 </div>
-            </div>
         </div>
     </div>
     <div id="status-message"></div>
