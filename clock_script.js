@@ -307,7 +307,11 @@ async function applyAndSaveSetting(key, value, element, styleProperty) {
         let finalValue = value;
         if (key.startsWith('grootte')) {
             finalValue += 'em';
-            document.getElementById(`weergave-${key.replace('grootte', 'grootte-')}`).textContent = finalValue;
+            const displayElementId = `weergave-${key.replace('grootte', 'grootte-').toLowerCase()}`;
+            const displayElement = document.getElementById(displayElementId);
+            if (displayElement) {
+                displayElement.textContent = finalValue;
+            }
         } else if (key.startsWith('padding')) {
             finalValue += 'px';
              if (key === 'paddingOnderTijd') weergavePaddingOnderTijd.textContent = finalValue;

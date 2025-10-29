@@ -249,5 +249,5 @@ body.alarm-active {
 #bewaar-favoriet,
 #herstel-favoriet,
 #herstel-standaard {
-    background-color: #4a4a4a; /* Iets lichter grijs voor dark mode */
+    background-color: #888888; /* Duidelijk lichter grijs voor dark mode */
 }
