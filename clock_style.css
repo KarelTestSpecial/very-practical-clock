@@ -18,7 +18,7 @@ body {
     height: 100%;
     background-color: #000000;
     visibility: hidden;
-    transition: justify-content 0.5s ease-in-out, align-items 0.5s ease-in-out;
+    transition: place-content 0.5s ease-in-out;
     font-family: Arial, sans-serif;
 }
 
@@ -54,6 +54,7 @@ body.position-bottom-right { place-content: flex-end flex-end; }
     display: flex;
     flex-direction: column;
     align-items: inherit;
+    align-self: stretch; /* Forceer volledige breedte om resize handle te fixen */
 }
 
 #notepad-area {
