@@ -24,6 +24,38 @@
         <div class="instellingen-paneel hidden">
             <h3 id="settingsTitleText"></h3>
 
+                <div class="instelling-groep">
+                    <h4>Alarm 1</h4>
+                    <input type="time" id="alarm-tijd-1">
+                    <select id="alarm-geluid-1">
+                        <option value="beep">Beep</option>
+                        <option value="bell">Bell</option>
+                        <option value="digital">Digital</option>
+                    </select>
+                    <input type="number" id="alarm-duur-1" min="1" max="60" value="5">
+                    <label class="switch"><input type="checkbox" id="alarm-toggle-1"><span class="slider round"></span></label>
+                </div>
+                <div class="instelling-groep">
+                    <h4>Alarm 2</h4>
+                    <input type="time" id="alarm-tijd-2">
+                    <select id="alarm-geluid-2">
+                        <option value="beep">Beep</option>
+                        <option value="bell">Bell</option>
+                        <option value="digital">Digital</option>
+                    </select>
+                    <input type="number" id="alarm-duur-2" min="1" max="60" value="5">
+                    <label class="switch"><input type="checkbox" id="alarm-toggle-2"><span class="slider round"></span></label>
+                </div>
+                <div class="instelling-groep knoppen-container">
+                    <button id="toggle-seconden"></button>
+                    <button id="bewaar-favoriet"></button>
+                    <button id="toggle-datum"></button>
+                    <button id="herstel-standaard"></button>
+                    <button id="toggle-dag-naam"></button>
+                    <button id="herstel-favoriet"></button>
+                    <button id="toggle-batterij"></button>
+                    <button id="toggle-notepad"></button>
+                </div>
             <div class="instelling-groep">
                 <h4 id="timeLabel">Time</h4>
                     <label for="font-tijd" id="lblFontTijd"></label>
@@ -101,39 +133,6 @@
                     </select>
                     <label for="achtergrond-kleur" id="lblAchtergrondKleur"></label>
                     <input type="color" id="achtergrond-kleur">
-                </div>
-
-                <div class="instelling-groep">
-                    <h4>Alarm 1</h4>
-                    <input type="time" id="alarm-tijd-1">
-                    <select id="alarm-geluid-1">
-                        <option value="beep">Beep</option>
-                        <option value="bell">Bell</option>
-                        <option value="digital">Digital</option>
-                    </select>
-                    <input type="number" id="alarm-duur-1" min="1" max="60" value="5">
-                    <label class="switch"><input type="checkbox" id="alarm-toggle-1"><span class="slider round"></span></label>
-                </div>
-                <div class="instelling-groep">
-                    <h4>Alarm 2</h4>
-                    <input type="time" id="alarm-tijd-2">
-                    <select id="alarm-geluid-2">
-                        <option value="beep">Beep</option>
-                        <option value="bell">Bell</option>
-                        <option value="digital">Digital</option>
-                    </select>
-                    <input type="number" id="alarm-duur-2" min="1" max="60" value="5">
-                    <label class="switch"><input type="checkbox" id="alarm-toggle-2"><span class="slider round"></span></label>
-                </div>
-                <div class="instelling-groep knoppen-container">
-                    <button id="toggle-seconden"></button>
-                    <button id="bewaar-favoriet"></button>
-                    <button id="toggle-datum"></button>
-                    <button id="herstel-standaard"></button>
-                    <button id="toggle-dag-naam"></button>
-                    <button id="herstel-favoriet"></button>
-                    <button id="toggle-batterij"></button>
-                    <button id="toggle-notepad"></button>
                 </div>
         </div>
     </div>
