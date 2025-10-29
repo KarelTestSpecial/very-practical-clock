@@ -10,8 +10,9 @@ html, body {
 
 body {
     display: grid;
-    place-content: start center; /* Align to top-center */
+    place-items: start center; /* Align to top-center */
     overflow-y: auto;
+    overflow-x: auto;
 }
 
 #klok-container {
