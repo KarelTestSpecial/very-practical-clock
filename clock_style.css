@@ -23,13 +23,13 @@ body {
     font-family: Arial, sans-serif;
 }
 
-body.position-top-left { place-content: flex-start flex-start; }
-body.position-top-center { place-content: flex-start center; }
-body.position-top-right { place-content: flex-start flex-end; }
-body.position-center-center { place-content: center center; }
-body.position-bottom-left { place-content: flex-end flex-start; }
-body.position-bottom-center { place-content: flex-end center; }
-body.position-bottom-right { place-content: flex-end flex-end; }
+body.position-top-left { place-items: flex-start flex-start; }
+body.position-top-center { place-items: flex-start center; }
+body.position-top-right { place-items: flex-start flex-end; }
+body.position-center-center { place-items: center center; }
+body.position-bottom-left { place-items: flex-end flex-start; }
+body.position-bottom-center { place-items: flex-end center; }
+body.position-bottom-right { place-items: flex-end flex-end; }
 
 #klok-container {
     display: flex;
