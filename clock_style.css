@@ -33,7 +33,7 @@ body.position-bottom-right { place-content: flex-end flex-end; }
 #klok-container {
     display: flex;
     flex-direction: column;
-    /* align-items is not needed, as it will align to the grid cell */
+    align-items: center; /* Center the clock elements internally */
     min-width: 300px; /* Prevent from becoming too narrow */
     box-sizing: border-box;
     padding: 15px;
