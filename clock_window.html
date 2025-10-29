@@ -24,10 +24,40 @@
         <div class="instellingen-paneel hidden">
             <h3 id="settingsTitleText"></h3>
 
-            <!-- Eerste rij: Time, Battery, Notepad -->
-            <div class="instellingen-rij">
                 <div class="instelling-groep">
-                    <h4 id="timeLabel">Time</h4>
+                    <h4>Alarm 1</h4>
+                    <input type="time" id="alarm-tijd-1">
+                    <select id="alarm-geluid-1">
+                        <option value="beep">Beep</option>
+                        <option value="bell">Bell</option>
+                        <option value="digital">Digital</option>
+                    </select>
+                    <input type="number" id="alarm-duur-1" min="1" max="60" value="5">
+                    <label class="switch"><input type="checkbox" id="alarm-toggle-1"><span class="slider round"></span></label>
+                </div>
+                <div class="instelling-groep">
+                    <h4>Alarm 2</h4>
+                    <input type="time" id="alarm-tijd-2">
+                    <select id="alarm-geluid-2">
+                        <option value="beep">Beep</option>
+                        <option value="bell">Bell</option>
+                        <option value="digital">Digital</option>
+                    </select>
+                    <input type="number" id="alarm-duur-2" min="1" max="60" value="5">
+                    <label class="switch"><input type="checkbox" id="alarm-toggle-2"><span class="slider round"></span></label>
+                </div>
+                <div class="instelling-groep knoppen-container">
+                    <button id="toggle-seconden"></button>
+                    <button id="bewaar-favoriet"></button>
+                    <button id="toggle-datum"></button>
+                    <button id="herstel-standaard"></button>
+                    <button id="toggle-dag-naam"></button>
+                    <button id="herstel-favoriet"></button>
+                    <button id="toggle-batterij"></button>
+                    <button id="toggle-notepad"></button>
+                </div>
+            <div class="instelling-groep">
+                <h4 id="timeLabel">Time</h4>
                     <label for="font-tijd" id="lblFontTijd"></label>
                     <select id="font-tijd">
                         <option value="Arial, sans-serif">Arial</option>
@@ -42,6 +72,21 @@
                     <input type="range" id="padding-boven-tijd" min="0" max="50" step="1">
                     <label for="padding-onder-tijd"><span id="lblPaddingOnderTijdText"></span> <span id="weergave-padding-onder-tijd"></span></label>
                     <input type="range" id="padding-onder-tijd" min="0" max="50" step="1">
+                </div>
+                <div class="instelling-groep">
+                    <h4 id="dateLabel">Date</h4>
+                    <label for="font-datum" id="lblFontDatum"></label>
+                    <select id="font-datum">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Verdana, sans-serif">Verdana</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                    </select>
+                    <label for="grootte-datum"><span id="lblGrootteDatumText"></span> <span id="weergave-grootte-datum"></span></label>
+                    <input type="range" id="grootte-datum" min="1.0" max="3.0" step="0.1">
+                    <label for="kleur-datum" id="lblKleurDatum"></label>
+                    <input type="color" id="kleur-datum">
+                    <label for="padding-onder-datum"><span id="lblPaddingOnderDatumText"></span> <span id="weergave-padding-onder-datum"></span></label>
+                    <input type="range" id="padding-onder-datum" min="0" max="50" step="1">
                 </div>
                 <div class="instelling-groep">
                     <h4 id="batteryLabel">Battery</h4>
@@ -89,58 +134,6 @@
                     <label for="achtergrond-kleur" id="lblAchtergrondKleur"></label>
                     <input type="color" id="achtergrond-kleur">
                 </div>
-            </div>
-
-            <!-- Tweede rij: Date, Alarms, Buttons -->
-            <div class="instellingen-rij">
-                <div class="instelling-groep">
-                    <h4 id="dateLabel">Date</h4>
-                    <label for="font-datum" id="lblFontDatum"></label>
-                    <select id="font-datum">
-                        <option value="Arial, sans-serif">Arial</option>
-                        <option value="Verdana, sans-serif">Verdana</option>
-                        <option value="'Courier New', monospace">Courier New</option>
-                    </select>
-                    <label for="grootte-datum"><span id="lblGrootteDatumText"></span> <span id="weergave-grootte-datum"></span></label>
-                    <input type="range" id="grootte-datum" min="1.0" max="3.0" step="0.1">
-                    <label for="kleur-datum" id="lblKleurDatum"></label>
-                    <input type="color" id="kleur-datum">
-                    <label for="padding-onder-datum"><span id="lblPaddingOnderDatumText"></span> <span id="weergave-padding-onder-datum"></span></label>
-                    <input type="range" id="padding-onder-datum" min="0" max="50" step="1">
-                </div>
-                <div class="instelling-groep">
-                    <h4>Alarm 1</h4>
-                    <input type="time" id="alarm-tijd-1">
-                    <select id="alarm-geluid-1">
-                        <option value="beep">Beep</option>
-                        <option value="bell">Bell</option>
-                        <option value="digital">Digital</option>
-                    </select>
-                    <input type="number" id="alarm-duur-1" min="1" max="60" value="5">
-                    <label class="switch"><input type="checkbox" id="alarm-toggle-1"><span class="slider round"></span></label>
-                </div>
-                <div class="instelling-groep">
-                    <h4>Alarm 2</h4>
-                    <input type="time" id="alarm-tijd-2">
-                    <select id="alarm-geluid-2">
-                        <option value="beep">Beep</option>
-                        <option value="bell">Bell</option>
-                        <option value="digital">Digital</option>
-                    </select>
-                    <input type="number" id="alarm-duur-2" min="1" max="60" value="5">
-                    <label class="switch"><input type="checkbox" id="alarm-toggle-2"><span class="slider round"></span></label>
-                </div>
-                <div class="instelling-groep knoppen-container">
-                    <button id="toggle-seconden"></button>
-                    <button id="bewaar-favoriet"></button>
-                    <button id="toggle-datum"></button>
-                    <button id="herstel-standaard"></button>
-                    <button id="toggle-dag-naam"></button>
-                    <button id="herstel-favoriet"></button>
-                    <button id="toggle-batterij"></button>
-                    <button id="toggle-notepad"></button>
-                </div>
-            </div>
         </div>
     </div>
     <div id="status-message"></div>
