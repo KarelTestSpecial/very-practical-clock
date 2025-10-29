@@ -10,11 +10,10 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center; /* Center content horizontally by default */
+    overflow: auto;
+    scrollbar-gutter: stable;
+    display: grid;
+    place-content: flex-start center; /* Default position: top-center */
     width: 100%;
     height: 100%;
     background-color: #000000;
@@ -23,27 +22,21 @@ body {
     font-family: Arial, sans-serif;
 }
 
-body.position-top-left { align-items: flex-start; }
-body.position-top-center { align-items: center; }
-body.position-top-right { align-items: flex-end; }
-body.position-center-center { justify-content: center; align-items: center; }
-body.position-bottom-left { justify-content: flex-end; align-items: flex-start; }
-body.position-bottom-center { justify-content: flex-end; align-items: center; }
-body.position-bottom-right { justify-content: flex-end; align-items: flex-end; }
+body.position-top-left { place-content: flex-start flex-start; }
+body.position-top-center { place-content: flex-start center; }
+body.position-top-right { place-content: flex-start flex-end; }
+body.position-center-center { place-content: center center; }
+body.position-bottom-left { place-content: flex-end flex-start; }
+body.position-bottom-center { place-content: flex-end center; }
+body.position-bottom-right { place-content: flex-end flex-end; }
 
 #klok-container {
     display: flex;
     flex-direction: column;
-    align-items: inherit;
+    /* align-items is not needed, as it will align to the grid cell */
     min-width: 300px; /* Prevent from becoming too narrow */
-    max-width: 100%;
-    max-height: 100%;
-    overflow-y: auto;
-    overflow-x: auto;
     box-sizing: border-box;
-    padding: 5px;
-    padding-bottom: 25px; /* Extra space for the horizontal scrollbar */
-    scrollbar-gutter: stable;
+    padding: 15px;
 }
 
 #tijd, #datum, #batterij-status {
