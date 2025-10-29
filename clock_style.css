@@ -39,9 +39,10 @@ body.position-bottom-right { justify-content: flex-end; align-items: flex-end; }
     max-width: 100%;
     max-height: 100%;
     overflow-y: auto;
+    overflow-x: auto;
     box-sizing: border-box;
     padding: 5px;
-    padding-right: 20px; /* Space for the scrollbar */
+    scrollbar-gutter: stable;
 }
 
 #tijd, #datum, #batterij-status {
@@ -242,4 +243,11 @@ body.screensaver-active {
 body.alarm-active {
     background-color: red !important;
     transition: background-color 0.2s ease-in-out;
+}
+
+/* Visueel onderscheid voor save/restore knoppen */
+#bewaar-favoriet,
+#herstel-favoriet,
+#herstel-standaard {
+    background-color: #888888; /* Duidelijk lichter grijs voor dark mode */
 }
