@@ -60,6 +60,7 @@ body.position-bottom-right { justify-content: flex-end; align-items: flex-end; }
     display: flex;
     flex-direction: column;
     align-items: inherit;
+    align-self: stretch; /* Forceer volledige breedte om resize handle te fixen */
 }
 
 #notepad-area {
