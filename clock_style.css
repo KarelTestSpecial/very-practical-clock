@@ -10,32 +10,32 @@ body {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow-y: auto;
-    overflow-x: auto;
+    overflow: auto;
     scrollbar-gutter: stable;
-    display: grid;
-    place-items: start center; /* Default position: top-center */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Default: top-center */
     width: 100%;
     height: 100%;
     background-color: #000000;
     visibility: hidden;
-    transition: place-items 0.5s ease-in-out;
+    transition: justify-content 0.5s, align-items 0.5s;
     font-family: Arial, sans-serif;
 }
 
-body.position-top-left { place-items: flex-start flex-start; }
-body.position-top-center { place-items: flex-start center; }
-body.position-top-right { place-items: flex-start flex-end; }
-body.position-center-center { place-items: center center; }
-body.position-bottom-left { place-items: flex-end flex-start; }
-body.position-bottom-center { place-items: flex-end center; }
-body.position-bottom-right { place-items: flex-end flex-end; }
+body.position-top-left { justify-content: flex-start; align-items: flex-start; }
+body.position-top-center { justify-content: center; align-items: flex-start; }
+body.position-top-right { justify-content: flex-end; align-items: flex-start; }
+body.position-center-center { justify-content: center; align-items: center; }
+body.position-bottom-left { justify-content: flex-start; align-items: flex-end; }
+body.position-bottom-center { justify-content: center; align-items: flex-end; }
+body.position-bottom-right { justify-content: flex-end; align-items: flex-end; }
 
 #klok-container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center the clock elements internally */
-    min-width: 300px; /* Prevent from becoming too narrow */
+    align-items: center;
+    min-width: 300px;
     box-sizing: border-box;
     padding: 15px;
 }
@@ -43,7 +43,7 @@ body.position-bottom-right { place-items: flex-end flex-end; }
 #tijd, #datum, #batterij-status {
     white-space: nowrap;
     line-height: 1;
-    text-align: inherit;
+    text-align: center;
 }
 #tijd { font-size: 3em; color: limegreen; }
 #datum { font-size: 1em; color: lightgray; margin-top: 3px; }
@@ -54,8 +54,7 @@ body.position-bottom-right { place-items: flex-end flex-end; }
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: inherit;
-    align-self: stretch; /* Forceer volledige breedte om resize handle te fixen */
+    align-items: center;
 }
 
 #notepad-area {
@@ -66,14 +65,14 @@ body.position-bottom-right { place-items: flex-end flex-end; }
     border: 1px solid #555;
     background-color: #282828;
     color: #eee;
-    resize: both; /* Allow resizing in both directions */
+    resize: both;
 }
 
 #notepad-container.hidden { display: none !important; }
 
 #knoppen-wrapper {
     display: flex;
-    justify-content: center; /* Center buttons within the wrapper */
+    justify-content: center;
     gap: 10px;
     width: 100%;
     margin-top: 8px;
@@ -108,7 +107,7 @@ button:hover { background-color: #555; }
     border: 1px solid #444;
     background-color: #282828;
     color: #eee;
-    width: auto; /* Width determined by content */
+    width: auto;
     box-sizing: border-box;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -120,7 +119,7 @@ button:hover { background-color: #555; }
     margin: 0 0 10px 0;
     font-size: 1.1em;
     text-align: center;
-    grid-column: 1 / -1; /* Make title span all columns */
+    grid-column: 1 / -1;
 }
 
 .instelling-groep {
@@ -150,10 +149,10 @@ button:hover { background-color: #555; }
 
 .knoppen-container {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns */
-    grid-template-rows: repeat(4, auto);   /* 4 rows */
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, auto);
     gap: 6px;
-    grid-column: span 2; /* Span across two grid columns */
+    grid-column: span 2;
 }
 
 .knoppen-container button { width: 100%; padding: 6px; font-size: 0.9em; }
@@ -210,7 +209,6 @@ button:hover { background-color: #555; }
 input:checked + .slider { background-color: #39FF14; }
 input:checked + .slider:before { transform: translateX(18px); }
 
-/* --- Screensaver --- */
 @keyframes glide {
     0% { transform: translate(var(--start-x), var(--start-y)); }
     100% { transform: translate(var(--end-x), var(--end-y)); }
@@ -226,7 +224,6 @@ body.screensaver-active {
     left: 0;
     padding: 20px;
     animation: glide 10s linear infinite alternate;
-    /* transition: transform 10s linear; */
 }
 
 .screensaver-active #knoppen-wrapper,
@@ -240,9 +237,8 @@ body.alarm-active {
     transition: background-color 0.2s ease-in-out;
 }
 
-/* Visueel onderscheid voor save/restore knoppen */
 #bewaar-favoriet,
 #herstel-favoriet,
 #herstel-standaard {
-    background-color: #888888; /* Duidelijk lichter grijs voor dark mode */
+    background-color: #888888;
 }
