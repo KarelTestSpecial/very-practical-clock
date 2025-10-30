@@ -26,7 +26,13 @@ document.addEventListener('DOMContentLoaded', () => {
         timeColor: '#39FF14',
         dateColor: '#B0B0B0',
         batteryColor: '#B0B0B0',
-        backgroundColor: '#000000'
+        backgroundColor: '#000000',
+
+        paddingTimeTop: '0',
+        paddingTimeBottom: '0',
+        paddingDateBottom: '0',
+        paddingBatteryBottom: '0',
+        batteryWidth: '2.0'
     };
 
     let settings = { ...defaultSettings }; // Lokale cache voor instellingen
@@ -66,6 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
         tijdElement.style.color = settings.timeColor;
         datumElement.style.color = settings.dateColor;
         batterijElement.style.color = settings.batteryColor;
+
+        // Padding en Breedte
+        tijdElement.style.paddingTop = `${settings.paddingTimeTop}px`;
+        tijdElement.style.paddingBottom = `${settings.paddingTimeBottom}px`;
+        datumElement.style.paddingBottom = `${settings.paddingDateBottom}px`;
+        batterijElement.style.paddingBottom = `${settings.paddingBatteryBottom}px`;
+        batterijElement.style.width = `${settings.batteryWidth}em`;
+        batterijElement.style.textAlign = 'center'; // Zorg ervoor dat de tekst gecentreerd blijft
     }
 
     async function updateKlok() {
