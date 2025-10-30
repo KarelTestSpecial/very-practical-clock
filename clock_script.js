@@ -21,7 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
         batteryFontFamily: 'Arial',
         batteryFontSize: '2.3',
         notepadFontFamily: 'Arial',
-        notepadFontSize: '2.1'
+        notepadFontSize: '2.1',
+
+        timeColor: '#39FF14',
+        dateColor: '#B0B0B0',
+        batteryColor: '#B0B0B0',
+        backgroundColor: '#000000'
     };
 
     let settings = { ...defaultSettings }; // Lokale cache voor instellingen
@@ -55,6 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
             notepadArea.style.fontFamily = settings.notepadFontFamily;
             notepadArea.style.fontSize = `${settings.notepadFontSize}em`;
         }
+
+        // Kleuren
+        document.body.style.backgroundColor = settings.backgroundColor;
+        tijdElement.style.color = settings.timeColor;
+        datumElement.style.color = settings.dateColor;
+        batterijElement.style.color = settings.batteryColor;
     }
 
     async function updateKlok() {

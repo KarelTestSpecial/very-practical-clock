@@ -14,7 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
         batteryFontFamily: 'Arial',
         batteryFontSize: '2.3',
         notepadFontFamily: 'Arial',
-        notepadFontSize: '2.1'
+        notepadFontSize: '2.1',
+
+        timeColor: '#39FF14',
+        dateColor: '#B0B0B0',
+        batteryColor: '#B0B0B0',
+        backgroundColor: '#000000'
     };
 
     // Hulpfunctie om de huidige instellingen op te halen
@@ -60,6 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateFontSizeLabel('date-font-size-label', settings.dateFontSize);
         updateFontSizeLabel('battery-font-size-label', settings.batteryFontSize);
         updateFontSizeLabel('notepad-font-size-label', settings.notepadFontSize);
+
+        // Colors
+        document.getElementById('time-color').value = settings.timeColor;
+        document.getElementById('date-color').value = settings.dateColor;
+        document.getElementById('battery-color').value = settings.batteryColor;
+        document.getElementById('background-color').value = settings.backgroundColor;
     }
 
     function updateFontSizeLabel(labelId, value) {
@@ -112,6 +123,12 @@ document.addEventListener('DOMContentLoaded', () => {
             handleStyleChange('notepadFontSize', e.target.value);
             updateFontSizeLabel('notepad-font-size-label', e.target.value);
         });
+
+        // Color Inputs
+        document.getElementById('time-color').addEventListener('input', (e) => handleStyleChange('timeColor', e.target.value));
+        document.getElementById('date-color').addEventListener('input', (e) => handleStyleChange('dateColor', e.target.value));
+        document.getElementById('battery-color').addEventListener('input', (e) => handleStyleChange('batteryColor', e.target.value));
+        document.getElementById('background-color').addEventListener('input', (e) => handleStyleChange('backgroundColor', e.target.value));
     }
 
     // Initialiseer alles

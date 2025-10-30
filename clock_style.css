@@ -42,12 +42,12 @@ body {
 
 #notepad-container {
     margin-top: 20px;
-    width: 500px; /* Approximate width from screenshot */
+    display: flex;
+    justify-content: center;
+    align-self: stretch; /* Fix for resize handle bug in flex container */
 }
 
 #notepad-area {
-    width: 100%;
-    height: 200px; /* Approximate height */
     background-color: #282828;
     border: 1px solid #555;
     color: #eee;
