@@ -2,27 +2,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const tijdElement = document.getElementById('tijd');
     const datumElement = document.getElementById('datum');
     const batterijElement = document.getElementById('batterij-status');
+    const notepadContainer = document.getElementById('notepad-container');
 
-    function updateKlok() {
+    // Definieer de standaardinstellingen
+    const defaultSettings = {
+        showSeconds: true,
+        showDate: true,
+        showDayName: true,
+        showBattery: true,
+        showNotepad: true
+    };
+
+    let settings = { ...defaultSettings }; // Lokale cache voor instellingen
+
+    // Functie om de zichtbaarheid van elementen toe te passen
+    function applyVisibilitySettings() {
+        datumElement.style.display = settings.showDate ? '' : 'none';
+        batterijElement.style.display = settings.showBattery ? '' : 'none';
+        notepadContainer.style.display = settings.showNotepad ? '' : 'none';
+    }
+
+    async function updateKlok() {
         const nu = new Date();
-
-        // Tijd instellen (HH:MM)
         const uren = nu.getHours().toString().padStart(2, '0');
         const minuten = nu.getMinutes().toString().padStart(2, '0');
-        tijdElement.textContent = `${uren}:${minuten}`;
+        let tijdString = `${uren}:${minuten}`;
 
-        // Datum instellen
-        const optiesDatum = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        if (settings.showSeconds) {
+            const seconden = nu.getSeconds().toString().padStart(2, '0');
+            tijdString += `:${seconden}`;
+        }
+        tijdElement.textContent = tijdString;
+
+        const optiesDatum = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            weekday: settings.showDayName ? 'long' : undefined
+        };
         datumElement.textContent = nu.toLocaleDateString('en-US', optiesDatum);
     }
 
     async function updateBatterijStatus() {
+        if (!settings.showBattery) return;
         if ('getBattery' in navigator) {
             try {
                 const battery = await navigator.getBattery();
                 batterijElement.textContent = `${Math.floor(battery.level * 100)}%`;
                 battery.addEventListener('levelchange', () => {
-                    batterijElement.textContent = `${Math.floor(battery.level * 100)}%`;
+                    if (settings.showBattery) {
+                        batterijElement.textContent = `${Math.floor(battery.level * 100)}%`;
+                    }
                 });
             } catch (error) {
                 console.error('Fout bij ophalen batterijstatus:', error);
@@ -34,14 +64,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Initial calls
-    updateKlok();
-    updateBatterijStatus();
+    // --- Initialisatie ---
+    async function initialize() {
+        const storedSettings = await chrome.storage.local.get(defaultSettings);
+        settings = storedSettings;
+        applyVisibilitySettings();
+        updateKlok(); // Eerste keer klok en datum correct instellen
+        updateBatterijStatus();
+        setInterval(updateKlok, 1000); // Start de klok-update loop
+    }
 
-    // Update de klok elke seconde
-    setInterval(updateKlok, 1000);
+    initialize();
 
-    // --- Instellingen Venster ---
+    // --- Live Update Listener ---
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+        if (request.action === 'setting-changed') {
+            settings[request.key] = request.value;
+            applyVisibilitySettings();
+            updateKlok(); // Her-render de klok/datum met de nieuwe instelling
+        }
+    });
+
+    // --- Instellingen Venster Knop ---
     const openInstellingenKnop = document.getElementById('open-instellingen-knop');
     if (openInstellingenKnop) {
         openInstellingenKnop.addEventListener('click', () => {
