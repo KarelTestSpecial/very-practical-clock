@@ -40,13 +40,12 @@ body.position-bottom-right { justify-content: flex-end; align-items: flex-end; }
     text-align: center;
 }
 
-#tijd, #datum, #batterij-status {
-    white-space: nowrap;
+#tijd {
+    font-size: 7.5em;
+    color: limegreen;
     line-height: 1;
     text-align: center;
 }
-#tijd { font-size: 3em; color: limegreen; }
-#datum { font-size: 1em; color: lightgray; margin-top: 3px; }
 
 #notepad-container {
     width: 100%;
@@ -82,28 +81,27 @@ body.position-bottom-right { justify-content: flex-end; align-items: flex-end; }
     pointer-events: none;
 }
 
-#klok-container:hover #knoppen-wrapper {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: all;
+#notepad-container {
+    margin-top: 20px;
+    width: 500px; /* Approximate width from screenshot */
 }
 
-button {
-    padding: 4px 8px;
-    font-size: 0.9em;
-    cursor: pointer;
-    background-color: #333;
-    color: #eee;
+#notepad-area {
+    width: 100%;
+    height: 200px; /* Approximate height */
+    background-color: #282828;
     border: 1px solid #555;
-    border-radius: 4px;
-    white-space: nowrap;
+    color: #eee;
+    font-size: 1.2em;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none; /* Disable resizing for now */
 }
-
-button:hover { background-color: #555; }
 
 .instellingen-paneel {
-    margin-top: 10px;
-    padding: 10px;
+    margin-top: 20px;
+    padding: 15px;
+    padding-bottom: 50px; /* Extra space at the bottom */
     border: 1px solid #444;
     background-color: #282828;
     color: #eee;
@@ -111,13 +109,13 @@ button:hover { background-color: #555; }
     box-sizing: border-box;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 15px;
+    width: 1000px; /* Approximate width */
+    box-sizing: border-box;
 }
 
-.instellingen-paneel.hidden { display: none !important; }
 .instellingen-paneel h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.1em;
+    grid-column: 1 / -1;
     text-align: center;
     grid-column: 1 / -1;
 }
@@ -125,27 +123,34 @@ button:hover { background-color: #555; }
 .instelling-groep {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
     border: 1px solid #444;
-    padding: 8px;
+    padding: 10px;
     border-radius: 4px;
-    flex: 1;
 }
 
-.instelling-groep h4 { margin: 0 0 8px 0; font-size: 1em; text-align: center; }
+.instelling-groep h4 {
+    margin: 0 0 5px 0;
+    font-size: 1em;
+    text-align: center;
+}
 
-.instellingen-paneel label { display: block; margin-bottom: 3px; font-size: 0.9em; }
-.instellingen-paneel input, .instellingen-paneel select {
+.instellingen-paneel label {
+    font-size: 0.9em;
+}
+
+.instellingen-paneel input,
+.instellingen-paneel select,
+.instellingen-paneel button {
     width: 100%;
-    padding: 5px;
+    padding: 6px;
     box-sizing: border-box;
     background-color: #333;
     border: 1px solid #555;
     color: #eee;
-    font-size: 1em;
-    margin-bottom: 8px;
+    font-size: 0.9em;
+    border-radius: 3px;
 }
-.instellingen-paneel input[type="range"] { padding: 0; }
 
 .knoppen-container {
     display: grid;
@@ -155,25 +160,17 @@ button:hover { background-color: #555; }
     grid-column: span 2;
 }
 
-.knoppen-container button { width: 100%; padding: 6px; font-size: 0.9em; }
-
-#status-message {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.85);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 1em;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease-in-out;
+.instellingen-paneel input[type="color"] {
+    height: 30px;
+    padding: 2px;
 }
 
-#status-message.visible { opacity: 1; visibility: visible; }
+.knoppen-container {
+    grid-column: span 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
 
 .switch {
   position: relative;
