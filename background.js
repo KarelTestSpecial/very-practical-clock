@@ -53,7 +53,39 @@ chrome.action.onClicked.addListener(async () => {
 });
 
 
-// --- Alarm Functionality ---
+async function findSettingsWindow() {
+    const windows = await chrome.windows.getAll({ populate: true });
+    const settingsWindowUrl = chrome.runtime.getURL("settings.html");
+    for (const window of windows) {
+        if (window.tabs && window.tabs.some(tab => tab.url === settingsWindowUrl)) {
+            return window;
+        }
+    }
+    return null;
+}
+
+async function createSettingsWindow() {
+    const existingWindow = await findSettingsWindow();
+    if (existingWindow) {
+        await chrome.windows.update(existingWindow.id, { focused: true });
+        return;
+    }
+
+    try {
+        await chrome.windows.create({
+            url: chrome.runtime.getURL("settings.html"),
+            type: "popup",
+            width: 450,
+            height: 700,
+            focused: true,
+        });
+    } catch (error) {
+        console.error("Error creating settings window:", error);
+    }
+}
+
+
+// --- Message Listener ---
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'set-alarm') {
         chrome.alarms.create(request.alarmName, { when: request.when });
@@ -61,8 +93,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     } else if (request.action === 'clear-alarm') {
         chrome.alarms.clear(request.alarmName);
         sendResponse({ status: "Alarm cleared" });
+    } else if (request.action === 'open-settings') {
+        createSettingsWindow();
+        sendResponse({ status: "Settings window opened" });
     }
-    return false;
+    return true; // Keep the message channel open for async response
 });
 
 

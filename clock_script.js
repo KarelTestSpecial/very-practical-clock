@@ -40,4 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update de klok elke seconde
     setInterval(updateKlok, 1000);
+
+    // --- Instellingen Venster ---
+    const openInstellingenKnop = document.getElementById('open-instellingen-knop');
+    if (openInstellingenKnop) {
+        openInstellingenKnop.addEventListener('click', () => {
+            chrome.runtime.sendMessage({ action: 'open-settings' });
+        });
+    }
 });
