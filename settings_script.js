@@ -19,7 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
         timeColor: '#39FF14',
         dateColor: '#B0B0B0',
         batteryColor: '#B0B0B0',
-        backgroundColor: '#000000'
+        backgroundColor: '#000000',
+
+        paddingTimeTop: '0',
+        paddingTimeBottom: '0',
+        paddingDateBottom: '0',
+        paddingBatteryBottom: '0',
+        batteryWidth: '2.0'
     };
 
     // Hulpfunctie om de huidige instellingen op te halen
@@ -71,13 +77,31 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('date-color').value = settings.dateColor;
         document.getElementById('battery-color').value = settings.batteryColor;
         document.getElementById('background-color').value = settings.backgroundColor;
+
+        // Paddings
+        document.getElementById('padding-time-top').value = settings.paddingTimeTop;
+        document.getElementById('padding-time-bottom').value = settings.paddingTimeBottom;
+        document.getElementById('padding-date-bottom').value = settings.paddingDateBottom;
+        document.getElementById('padding-battery-bottom').value = settings.paddingBatteryBottom;
+        document.getElementById('battery-width').value = settings.batteryWidth;
+
+        // Update padding/width labels
+        updateLabel('padding-time-top-label', settings.paddingTimeTop, 'px');
+        updateLabel('padding-time-bottom-label', settings.paddingTimeBottom, 'px');
+        updateLabel('padding-date-bottom-label', settings.paddingDateBottom, 'px');
+        updateLabel('padding-battery-bottom-label', settings.paddingBatteryBottom, 'px');
+        updateLabel('battery-width-label', settings.batteryWidth, '');
     }
 
     function updateFontSizeLabel(labelId, value) {
+        updateLabel(labelId, value, 'em');
+    }
+
+    function updateLabel(labelId, value, unit) {
         const label = document.getElementById(labelId);
         if (label) {
             // Vervang de numerieke waarde in de tekst van het label
-            label.textContent = label.textContent.replace(/[\d.]+em/, `${value}em`);
+            label.textContent = label.textContent.replace(/[\d.]+/, `${value}`);
         }
     }
 
@@ -129,6 +153,28 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('date-color').addEventListener('input', (e) => handleStyleChange('dateColor', e.target.value));
         document.getElementById('battery-color').addEventListener('input', (e) => handleStyleChange('batteryColor', e.target.value));
         document.getElementById('background-color').addEventListener('input', (e) => handleStyleChange('backgroundColor', e.target.value));
+
+        // Padding and Width Ranges
+        document.getElementById('padding-time-top').addEventListener('input', (e) => {
+            handleStyleChange('paddingTimeTop', e.target.value);
+            updateLabel('padding-time-top-label', e.target.value, 'px');
+        });
+        document.getElementById('padding-time-bottom').addEventListener('input', (e) => {
+            handleStyleChange('paddingTimeBottom', e.target.value);
+            updateLabel('padding-time-bottom-label', e.target.value, 'px');
+        });
+        document.getElementById('padding-date-bottom').addEventListener('input', (e) => {
+            handleStyleChange('paddingDateBottom', e.target.value);
+            updateLabel('padding-date-bottom-label', e.target.value, 'px');
+        });
+        document.getElementById('padding-battery-bottom').addEventListener('input', (e) => {
+            handleStyleChange('paddingBatteryBottom', e.target.value);
+            updateLabel('padding-battery-bottom-label', e.target.value, 'px');
+        });
+        document.getElementById('battery-width').addEventListener('input', (e) => {
+            handleStyleChange('batteryWidth', e.target.value);
+            updateLabel('battery-width-label', e.target.value, '');
+        });
     }
 
     // Initialiseer alles
