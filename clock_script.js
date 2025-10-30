@@ -628,7 +628,7 @@ function setupEventListeners() {
             try {
                 const currentWindow = await chrome.windows.getCurrent();
                 if (currentWindow.state !== 'fullscreen') await toggleScreensaver();
-            } catch (e) { /* Ignore errors if window is already closed */ }
+            } catch (e) {  }
         }
         clearTimeout(windowResizeTimer);
         windowResizeTimer = setTimeout(() => {
