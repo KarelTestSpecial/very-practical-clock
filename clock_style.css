@@ -54,7 +54,7 @@ body {
     font-size: 1.2em;
     padding: 10px;
     box-sizing: border-box;
-    resize: none; /* Disable resizing for now */
+    resize: both; /* Enable resizing */
 }
 
 #settings-body {
