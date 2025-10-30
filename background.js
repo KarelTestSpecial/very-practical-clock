@@ -75,8 +75,8 @@ async function createSettingsWindow() {
         await chrome.windows.create({
             url: chrome.runtime.getURL("settings.html"),
             type: "popup",
-            width: 450,
-            height: 700,
+            width: 1020,
+            height: 680,
             focused: true,
         });
     } catch (error) {
