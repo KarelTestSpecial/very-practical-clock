@@ -3,177 +3,128 @@ html, body {
     width: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Verdana', sans-serif;
 }
 
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    overflow: auto;
-    scrollbar-gutter: stable;
     display: grid;
-    place-content: flex-start center; /* Default position: top-center */
-    width: 100%;
-    height: 100%;
-    background-color: #000000;
-    visibility: hidden;
-    transition: place-content 0.5s ease-in-out;
-    font-family: Arial, sans-serif;
+    place-items: start center; /* Align to top-center */
+    overflow-y: auto;
+    overflow-x: auto;
 }
-
-body.position-top-left { place-content: flex-start flex-start; }
-body.position-top-center { place-content: flex-start center; }
-body.position-top-right { place-content: flex-start flex-end; }
-body.position-center-center { place-content: center center; }
-body.position-bottom-left { place-content: flex-end flex-start; }
-body.position-bottom-center { place-content: flex-end center; }
-body.position-bottom-right { place-content: flex-end flex-end; }
 
 #klok-container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center the clock elements internally */
-    min-width: 300px; /* Prevent from becoming too narrow */
-    box-sizing: border-box;
-    padding: 15px;
+    align-items: center;
+    padding-top: 50px; /* Add some space from the top */
 }
 
-#tijd, #datum, #batterij-status {
-    white-space: nowrap;
+#tijd {
+    font-size: 7.5em;
+    color: limegreen;
     line-height: 1;
-    text-align: inherit;
 }
-#tijd { font-size: 3em; color: limegreen; }
-#datum { font-size: 1em; color: lightgray; margin-top: 3px; }
+
+#datum {
+    font-size: 2.2em;
+    color: lightgray;
+    margin-top: 10px;
+}
+
+#batterij-status {
+    font-size: 2.3em;
+    color: lightgray;
+    margin-top: 10px;
+}
 
 #notepad-container {
-    width: 100%;
-    margin-top: 5px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: inherit;
-    align-self: stretch; /* Forceer volledige breedte om resize handle te fixen */
+    margin-top: 20px;
+    width: 500px; /* Approximate width from screenshot */
 }
 
 #notepad-area {
     width: 100%;
-    min-height: 40px;
-    padding: 5px;
-    font-size: 0.9em;
-    border: 1px solid #555;
+    height: 200px; /* Approximate height */
     background-color: #282828;
-    color: #eee;
-    resize: both; /* Allow resizing in both directions */
-}
-
-#notepad-container.hidden { display: none !important; }
-
-#knoppen-wrapper {
-    display: flex;
-    justify-content: center; /* Center buttons within the wrapper */
-    gap: 10px;
-    width: 100%;
-    margin-top: 8px;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s ease-in-out;
-    pointer-events: none;
-}
-
-#klok-container:hover #knoppen-wrapper {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: all;
-}
-
-button {
-    padding: 4px 8px;
-    font-size: 0.9em;
-    cursor: pointer;
-    background-color: #333;
-    color: #eee;
     border: 1px solid #555;
-    border-radius: 4px;
-    white-space: nowrap;
+    color: #eee;
+    font-size: 1.2em;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: none; /* Disable resizing for now */
 }
-
-button:hover { background-color: #555; }
 
 .instellingen-paneel {
-    margin-top: 10px;
-    padding: 10px;
+    margin-top: 20px;
+    padding: 15px;
+    padding-bottom: 50px; /* Extra space at the bottom */
     border: 1px solid #444;
     background-color: #282828;
     color: #eee;
-    width: auto; /* Width determined by content */
-    box-sizing: border-box;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    gap: 15px;
+    width: 1000px; /* Approximate width */
+    box-sizing: border-box;
 }
 
-.instellingen-paneel.hidden { display: none !important; }
 .instellingen-paneel h3 {
-    margin: 0 0 10px 0;
-    font-size: 1.1em;
+    grid-column: 1 / -1;
     text-align: center;
-    grid-column: 1 / -1; /* Make title span all columns */
+    margin: 0 0 10px 0;
+    font-size: 1.4em;
 }
 
 .instelling-groep {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
     border: 1px solid #444;
-    padding: 8px;
+    padding: 10px;
     border-radius: 4px;
-    flex: 1;
 }
 
-.instelling-groep h4 { margin: 0 0 8px 0; font-size: 1em; text-align: center; }
+.instelling-groep h4 {
+    margin: 0 0 5px 0;
+    font-size: 1em;
+    text-align: center;
+}
 
-.instellingen-paneel label { display: block; margin-bottom: 3px; font-size: 0.9em; }
-.instellingen-paneel input, .instellingen-paneel select {
+.instellingen-paneel label {
+    font-size: 0.9em;
+}
+
+.instellingen-paneel input,
+.instellingen-paneel select,
+.instellingen-paneel button {
     width: 100%;
-    padding: 5px;
+    padding: 6px;
     box-sizing: border-box;
     background-color: #333;
     border: 1px solid #555;
     color: #eee;
-    font-size: 1em;
-    margin-bottom: 8px;
+    font-size: 0.9em;
+    border-radius: 3px;
 }
-.instellingen-paneel input[type="range"] { padding: 0; }
+
+.instellingen-paneel input[type="range"] {
+    padding: 0;
+}
+
+.instellingen-paneel input[type="color"] {
+    height: 30px;
+    padding: 2px;
+}
 
 .knoppen-container {
+    grid-column: span 2;
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 columns */
-    grid-template-rows: repeat(4, auto);   /* 4 rows */
-    gap: 6px;
-    grid-column: span 2; /* Span across two grid columns */
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
 }
-
-.knoppen-container button { width: 100%; padding: 6px; font-size: 0.9em; }
-
-#status-message {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.85);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 1em;
-    z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease-in-out;
-}
-
-#status-message.visible { opacity: 1; visibility: visible; }
 
 .switch {
   position: relative;
@@ -209,39 +160,10 @@ button:hover { background-color: #555; }
 input:checked + .slider { background-color: #39FF14; }
 input:checked + .slider:before { transform: translateX(18px); }
 
-/* --- Screensaver --- */
-@keyframes glide {
-    0% { transform: translate(var(--start-x), var(--start-y)); }
-    100% { transform: translate(var(--end-x), var(--end-y)); }
-}
-
-body.screensaver-active {
-    cursor: none;
-}
-
-.screensaver-active #klok-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    padding: 20px;
-    animation: glide 10s linear infinite alternate;
-    /* transition: transform 10s linear; */
-}
-
-.screensaver-active #knoppen-wrapper,
-.screensaver-active .instellingen-paneel,
-.screensaver-active #notepad-container {
-    display: none !important;
-}
-
-body.alarm-active {
-    background-color: red !important;
-    transition: background-color 0.2s ease-in-out;
-}
-
-/* Visueel onderscheid voor save/restore knoppen */
-#bewaar-favoriet,
-#herstel-favoriet,
-#herstel-standaard {
-    background-color: #888888; /* Duidelijk lichter grijs voor dark mode */
+/* Lighter buttons for specific actions */
+.knoppen-container button:nth-child(2), /* Save as Favorite */
+.knoppen-container button:nth-child(4), /* Restore Default */
+.knoppen-container button:nth-child(6)  /* Restore Favorite */
+{
+    background-color: #888;
 }
