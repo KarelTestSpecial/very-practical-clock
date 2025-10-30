@@ -5,119 +5,129 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings</title>
     <link rel="stylesheet" href="clock_style.css">
+    <!-- Inline style to ensure visibility, as clock_style.css might hide the body -->
+    <style>
+        #settings-body {
+            visibility: visible;
+        }
+    </style>
 </head>
 <body id="settings-body">
+    <!-- This h3 is required for settings_script.js but hidden visually -->
+    <h3 id="settingsTitleText" style="display: none;">Settings</h3>
+
     <div class="instellingen-paneel">
-        <h3>Settings</h3>
 
-        <!-- Alarm 1 -->
+        <!-- Row 1, Column 1: Alarm 1 -->
         <div class="instelling-groep">
-            <h4>Alarm 1</h4>
-            <input type="time" value="08:00">
-            <select>
-                <option>Digital</option>
-                <option>Bell</option>
+            <input type="time" id="alarm-tijd-1" value="08:00">
+            <select id="alarm-geluid-1">
+                <option value="digital">Digital</option>
+                <option value="bell">Bell</option>
+                <option value="beep">Beep</option>
             </select>
-            <input type="number" value="10">
-            <label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+            <input type="number" id="alarm-duur-1" value="10" min="1" max="60">
+            <label class="switch"><input type="checkbox" id="alarm-toggle-1"><span class="slider round"></span></label>
         </div>
 
-        <!-- Alarm 2 -->
+        <!-- Row 1, Column 2: Alarm 2 -->
         <div class="instelling-groep">
-            <h4>Alarm 2</h4>
-            <input type="time" value="18:00">
-            <select>
-                <option>Bell</option>
-                <option>Digital</option>
+            <input type="time" id="alarm-tijd-2" value="18:00">
+            <select id="alarm-geluid-2">
+                <option value="bell">Bell</option>
+                <option value="digital">Digital</option>
+                <option value="beep">Beep</option>
             </select>
-            <input type="number" value="5">
-            <label class="switch"><input type="checkbox"><span class="slider round"></span></label>
+            <input type="number" id="alarm-duur-2" value="5" min="1" max="60">
+            <label class="switch"><input type="checkbox" id="alarm-toggle-2"><span class="slider round"></span></label>
         </div>
 
-        <!-- General Buttons -->
-        <div class="instelling-groep knoppen-container">
-            <button id="toggle-seconds-btn">Toggle Seconds</button>
-            <button>Save as Favorite</button>
-            <button id="toggle-date-btn">Toggle Date</button>
-            <button>Restore Default</button>
-            <button id="toggle-day-name-btn">Toggle Day Name</button>
-            <button>Restore Favorite</button>
-            <button id="toggle-battery-btn">Toggle Battery</button>
-            <button id="toggle-notepad-btn">Toggle Notepad</button>
+        <!-- Row 1, Column 3: Toggles -->
+        <div class="instelling-groep knoppen-container verticaal">
+            <button id="toggle-seconden"></button>
+            <button id="toggle-datum"></button>
+            <button id="toggle-dag-naam"></button>
+            <button id="toggle-batterij"></button>
         </div>
 
-        <!-- Time Settings -->
-        <div class="instelling-groep">
-            <h4>Time Font</h4>
-            <select id="time-font-family">
-                <option>Verdana</option>
-                <option>Arial</option>
-            </select>
-            <label id="time-font-size-label">Time Size 4.5em</label>
-            <input type="range" id="time-font-size" min="1" max="10" step="0.1" value="4.5">
-            <label>Time Color</label>
-            <input type="color" id="time-color" value="#39FF14">
-            <label id="padding-time-top-label">Padding Above Time 0px</label>
-            <input type="range" id="padding-time-top" min="0" max="50" value="0">
-            <label id="padding-time-bottom-label">Padding Below Time 0px</label>
-            <input type="range" id="padding-time-bottom" min="0" max="50" value="0">
+        <!-- Row 1, Column 4: Actions -->
+        <div class="instelling-groep knoppen-container verticaal">
+            <button id="bewaar-favoriet"></button>
+            <button id="herstel-standaard"></button>
+            <button id="herstel-favoriet"></button>
+            <button id="toggle-notepad"></button>
         </div>
 
-        <!-- Date Settings -->
+        <!-- Row 2, Column 1: Time Settings -->
         <div class="instelling-groep">
-            <h4>Date Font</h4>
-            <select id="date-font-family">
-                <option>Arial</option>
-                <option>Verdana</option>
+            <select id="font-tijd">
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="'Courier New', monospace">Courier New</option>
             </select>
-            <label id="date-font-size-label">Date Size 2.2em</label>
-            <input type="range" id="date-font-size" min="1" max="5" step="0.1" value="2.2">
-            <label>Date Color</label>
-            <input type="color" id="date-color" value="#B0B0B0">
-            <label id="padding-date-bottom-label">Padding Below Date 0px</label>
-            <input type="range" id="padding-date-bottom" min="0" max="50" value="0">
+            <label id="weergave-grootte-tijd">4.0em</label>
+            <input type="range" id="grootte-tijd" min="1.0" max="7.0" step="0.1" value="4.0">
+            <input type="color" id="kleur-tijd" value="#39FF14">
+            <label id="weergave-padding-boven-tijd">0px</label>
+            <input type="range" id="padding-boven-tijd" min="0" max="50" step="1" value="0">
+            <label id="weergave-padding-onder-tijd">0px</label>
+            <input type="range" id="padding-onder-tijd" min="0" max="50" step="1" value="0">
         </div>
 
-        <!-- Battery Settings -->
+        <!-- Row 2, Column 2: Date Settings -->
         <div class="instelling-groep">
-            <h4>Battery Font</h4>
-            <select id="battery-font-family">
-                <option>Arial</option>
-                <option>Verdana</option>
+            <select id="font-datum">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="'Courier New', monospace">Courier New</option>
             </select>
-            <label id="battery-font-size-label">Battery Size 2.3em</label>
-            <input type="range" id="battery-font-size" min="1" max="5" step="0.1" value="2.3">
-            <label>Battery Color</label>
-            <input type="color" id="battery-color" value="#B0B0B0">
-            <label id="battery-width-label">Battery Width 2</label>
-            <input type="range" id="battery-width" min="0.5" max="2.5" step="0.05" value="2.0">
-            <label id="padding-battery-bottom-label">Padding Below Battery 0px</label>
-            <input type="range" id="padding-battery-bottom" min="0" max="50" value="0">
+            <label id="weergave-grootte-datum">1.2em</label>
+            <input type="range" id="grootte-datum" min="1.0" max="3.0" step="0.1" value="1.2">
+            <input type="color" id="kleur-datum" value="#B0B0B0">
+            <label id="weergave-padding-onder-datum">0px</label>
+            <input type="range" id="padding-onder-datum" min="0" max="50" step="1" value="0">
         </div>
 
-        <!-- Notepad & General Settings -->
+        <!-- Row 2, Column 3: Battery Settings -->
         <div class="instelling-groep">
-            <h4>Notepad Font</h4>
-            <select id="notepad-font-family">
-                <option>Arial</option>
-                <option>Verdana</option>
+            <select id="font-batterij">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="'Courier New', monospace">Courier New</option>
             </select>
-            <label id="notepad-font-size-label">Notepad Size 2.1em</label>
-            <input type="range" id="notepad-font-size" min="1" max="5" step="0.1" value="2.1">
-            <label>Notepad Text Align</label>
-            <select>
-                <option>Center</option>
-                <option>Left</option>
-                <option>Right</option>
+            <label id="weergave-grootte-batterij">1.2em</label>
+            <input type="range" id="grootte-batterij" min="1.0" max="3.0" step="0.1" value="1.2">
+            <input type="color" id="kleur-batterij" value="#B0B0B0">
+            <label id="weergave-breedte-batterij">1.0</label>
+            <input type="range" id="breedte-batterij" min="0.5" max="2.5" step="0.05" value="1.0">
+            <label id="weergave-padding-onder-batterij">0px</label>
+            <input type="range" id="padding-onder-batterij" min="0" max="50" step="1" value="0">
+        </div>
+
+        <!-- Row 2, Column 4: Notepad & General -->
+        <div class="instelling-groep">
+            <select id="font-notepad">
+                <option value="Arial, sans-serif">Arial</option>
+                <option value="Verdana, sans-serif">Verdana</option>
+                <option value="'Courier New', monospace">Courier New</option>
             </select>
-            <label>Clock Position</label>
-            <select>
-                <option>Top Center</option>
-                <option>Top Left</option>
-                <option>Top Right</option>
+            <label id="weergave-grootte-notepad">1.5em</label>
+            <input type="range" id="grootte-notepad" min="1.0" max="3.0" step="0.1" value="1.5">
+            <select id="notepad-text-align">
+                <option value="left">Left</option>
+                <option value="center" selected>Center</option>
+                <option value="right">Right</option>
             </select>
-            <label>Background Color</label>
-            <input type="color" id="background-color" value="#000000">
+            <select id="klok-positie-select">
+                <option value="top-left">Top Left</option>
+                <option value="top-center" selected>Top Center</option>
+                <option value="top-right">Top Right</option>
+                <option value="center-center">Center</option>
+                <option value="bottom-left">Bottom Left</option>
+                <option value="bottom-center">Bottom Center</option>
+                <option value="bottom-right">Bottom Right</option>
+            </select>
+            <input type="color" id="achtergrond-kleur" value="#000000">
         </div>
     </div>
     <script src="settings_script.js"></script>

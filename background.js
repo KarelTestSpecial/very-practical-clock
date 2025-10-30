@@ -52,17 +52,41 @@ chrome.action.onClicked.addListener(async () => {
     }
 });
 
+async function createSettingsWindow() {
+    const settingsUrl = chrome.runtime.getURL('settings.html');
+    const windows = await chrome.windows.getAll({ populate: true });
 
-// --- Alarm Functionality ---
+    for (const window of windows) {
+        const hasSettingsTab = window.tabs && window.tabs.some(tab => tab.url === settingsUrl);
+        if (hasSettingsTab) {
+            await chrome.windows.update(window.id, { focused: true });
+            return;
+        }
+    }
+
+    await chrome.windows.create({
+        url: settingsUrl,
+        type: 'popup',
+        width: 1020,
+        height: 680,
+    });
+}
+
+
+// --- Message Handling ---
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'set-alarm') {
+    if (request.action === 'open-settings') {
+        createSettingsWindow();
+        sendResponse({ status: "Settings window opened or focused." });
+    } else if (request.action === 'set-alarm') {
         chrome.alarms.create(request.alarmName, { when: request.when });
         sendResponse({ status: "Alarm set" });
     } else if (request.action === 'clear-alarm') {
         chrome.alarms.clear(request.alarmName);
         sendResponse({ status: "Alarm cleared" });
     }
-    return false;
+    // Return true to indicate you wish to send a response asynchronously
+    return true;
 });
 
 
