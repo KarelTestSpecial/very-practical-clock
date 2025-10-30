@@ -1,3 +1,4 @@
+/*
 
 // Globale DOM Element Referenties (na DOMContentLoaded)
 let tijdElement, datumElement, batterijStatusElement, klokContainer, notepadContainer, notepadArea, toonInstellingenKnop;
@@ -221,3 +222,5 @@ async function initializeClock() {
 }
 
 document.addEventListener('DOMContentLoaded', initializeClock);
+
+*/
